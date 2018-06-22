@@ -129,7 +129,7 @@ if ($userID != 0) {
 			));
 		}
 		// TODO: only update every x minutes
-		else if ($focus && $focus->agent_name == strtolower($table['data'][$i][0])) {
+		/* else if ($focus && $focus->agent_name == strtolower($table['data'][$i][0])) {
 			$wpdb->query("UPDATE cs_focus SET 
 			focus_8am = '".$table['data'][$i][3]."',
 			focus_9am = '".$table['data'][$i][4]."',
@@ -145,74 +145,114 @@ if ($userID != 0) {
 			focus_7pm = '".$table['data'][$i][14]."',
 			updated = '1'
 			WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
-		}
+		} */
 	
 	}
-
-	// Print Current Focus
-
-	$currentFocus = '';
-	$upcomingFocus = '';
-
-	for ($i = 3; $i < $colTimes; $i++) {
-		if ($colTimesRowStart[$i] == $tableTimes[$currentHour]) {
-			$currentFocus = $table['data'][$userID][$i];
-			$upcomingFocus = $table['data'][$userID][$i+1];
+	
+	echo '<h1>Your stats for today:</h1> <br><br>';
+	
+	$focusToday = $wpdb->get_row( "SELECT * FROM cs_focus WHERE agent_name = '".$username."' AND shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
+	
+	//print_r($focus);
+	
+	$totalHoursToday = 0;
+	
+	for ($i = 4; $i < 16; $i++) {
+		if ($focusToday[$i] != '') {
+			$totalHoursToday++;
 		}
 	}
+	
+	$IBHoursToday = 0;
+	
+	for ($i = 4; $i < 16; $i++) {
+		if (startsWith($focusToday[$i], 'IB/')) {
+			$IBHoursToday++;
+		}
+	}
+	
+	$percentIB = ($IBHoursToday / $totalHoursToday) * 100;
+	
+	echo '% you spent on IB today: '.$percentIB.'%<br>';
+	
+	$ICHoursToday = 0;
+	
+	for ($i = 4; $i < 16; $i++) {
+		if (startsWith($focusToday[$i], 'IC/')) {
+			$ICHoursToday++;
+		}
+	}
+	
+	$percentIC = ($ICHoursToday / $totalHoursToday) * 100;
+	
+	echo '% you spent on IC today: '.$percentIC.'%<br>';
+	
+	$OtherHoursToday = 0;
+	
+	for ($i = 4; $i < 16; $i++) {
+		if (!startsWith($focusToday[$i], 'IC/') && !startsWith($focusToday[$i], 'IB/') && !startsWith($focusToday[$i], 'ZD/') && $focusToday[$i] != '') {
+			$OtherHoursToday++;
+		}
+	}
+	
+	$percentOther = ($OtherHoursToday / $totalHoursToday) * 100;
+	
+	echo '% you spent on other stuff today: '.$percentOther.'%<br>';
+	
+	echo '<h1>Your stats since start:</h1> <br><br>';
+	
+	$focusSinceStart = $wpdb->get_results( "SELECT * FROM cs_focus WHERE agent_name = '".$username."' AND shift_date <= '". $shift_date ." 00:00:00'", ARRAY_N);
+	
+	$totalHoursStart = 0;
+	$ICHoursStart = 0;
+	$IBHoursStart = 0;
+	$OtherHoursStart = 0;
+	$percentIBStart = 0;
+	$percentICStart = 0;
+	$percentOtherStart = 0;
+	
+	 foreach( $focusSinceStart as $focus ) {
 
-	if ($currentFocus == "LNCH") {
-		echo '<center><h2><strong>Hooray, it\'s lunch time!</strong></h2></center><br />';
-	}
-	else if ($currentFocus == "TM") {
-		echo '<center><h2><strong>Hurry up, you have a team meeting right now!</strong></h2></center><br />';
-	}
-	else if ($currentFocus != '') {
-		echo '<center><h2>'. do_shortcode('[icon name="fa-arrow-circle-right"]'). ' Your Current Focus: <strong>'.$currentFocus. '</strong></h2></center>';
+        for ($i = 4; $i < 16; $i++) {
+			if ($focus[$i] != '') {
+				$totalHoursStart++;
+			}
+		}
 		
-		if (strpos($currentFocus, 'IB') !== false || $username == "Saad") {
-			echo $special;
+		for ($i = 4; $i < 16; $i++) {
+			if (startsWith($focus[$i], 'IB/')) {
+				$IBHoursStart++;
+			}
 		}
 		
-		echo '<br />';
-	}
-	else {
-		echo '<center><h2>Zzzzzzz...</h2></center><br />';
-	}
-
-	// Print Upcoming Focus
-	if ($upcomingFocus != '' && $upcomingFocus != 'LNCH' && upcomingFocus != 'TM') {
-		echo ''.do_shortcode('[icon name="fa-level-up"]').' Your Upcoming Focus: <strong>'. $upcomingFocus. '</strong><br />';
-	}
-	else if ($upcomingFocus == "LNCH") {
-		echo 'It\'s almost time for your lunch break! :)<br />';
-	}
-	else if ($upcomingFocus == "TM") {
-		echo 'Get ready! You\'re about to have an awesome team meeting!<br />';
-	} 
-	else if ($currentFocus != '' && $upcomingFocus == '') {
-		echo ''.do_shortcode('[icon name="fa-check"]').' Great job! You\'re almost done for the day! Don\'t forget to fill out your <a href="https://docs.google.com/spreadsheets/u/2/d/1Spu8BRAPDjOr1F3iQ_pMqWnxIJB4_kZIB5eIcGDPeGg/edit#gid=317380563" target="_blank">task hours</a>!<br />';
-	}
-	
-	echo '<br />';
-
-	// Print Lunch
-	$lunchKey = array_search('LNCH', $table['data'][$userID]);
-	
-	
-	if ($lunchKey != 0 && $currentHour < $tableTimes[$colTimesRowStart[$lunchKey]]) {
-		echo 'Your Lunch Time: <strong>'.$colTimesRowStart[$lunchKey]. '</strong><br /><br />';
-	}
-
-	$teamMeetingKey = array_search('TM', $table['data'][$userID]);
-
-	if ($teamMeetingKey != '' && $currentHour < $tableTimes[$colTimesRowStart[$teamMeetingKey]]) {
-		echo '<span style="color: red">*Don\'t forget, you have a team meeting today at <strong>'.$colTimesRowStart[$teamMeetingKey].'</strong></span><br /><br />';
-		
-		if ($dayOfWeek == 'Fri') {
-			echo '<span style="color: red">** Please fill out the <a href="https://docs.google.com/spreadsheets/u/2/d/1sYEUpfr-xXhEK58b6ns5MTMgbQry-oXN9zkvqfvRqSw/edit?ouid=104196470359843284937&usp=sheets_home&ths=true" target="_blank">Friday-Wrap Up</a> before the meeting as well :)</span><br /><br />';
+		for ($i = 4; $i < 16; $i++) {
+			if (startsWith($focus[$i], 'IC/')) {
+				$ICHoursStart++;
+			}
 		}
-	}
+		
+		for ($i = 4; $i < 16; $i++) {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '') {
+				$OtherHoursStart++;
+			}
+		}
+    }
+	
+	/*echo $totalHoursStart."<br>";
+	echo $ICHoursStart."<br>";
+	echo $IBHoursStart."<br>";
+	echo $OtherHoursStart."<br>";
+	echo $percentIBStart."<br>";
+	echo $percentICStart."<br>";
+	echo $percentOtherStart."<br>"; */
+	
+	$percentIBStart = number_format((float)(($IBHoursStart / $totalHoursStart) * 100), 2, '.', '');
+	$percentICStart = number_format((float)(($ICHoursStart / $totalHoursStart) * 100), 2, '.', '');
+	$percentOtherStart = number_format((float)(($OtherHoursStart / $totalHoursStart) * 100), 2, '.', '');
+	
+	echo '% you spent on IB since start: '.$percentIBStart.'%<br>';
+	echo '% you spent on IC since start: '.$percentICStart.'%<br>';
+	echo '% you spent on Other Stuff since start: '.$percentOtherStart.'%<br>';
 	
 	echo '<br /><center><p><i><span style="color: black; font-size: 11px;">Page Last Updated: '. $lastUpdated .'</span></i></p></center><br />';
 
@@ -221,6 +261,144 @@ if ($userID != 0) {
 }
 
 echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><strong>'.do_shortcode('[icon name="fa-search-plus"]').' CS Quick Glance</strong></div>';
+
+echo '<div style="padding-left: 30px; margin-top: 0px; padding-top: 10px; padding-bottom: 10px; background-color: #fcf7fc;"><h1>CS stats for today:</h1> <br><br>';
+	
+	$focusCSSinceToday = $wpdb->get_results( "SELECT * FROM cs_focus WHERE shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
+	
+	$CS_totalHoursToday = 0;
+	$CS_ICHoursToday = 0;
+	$CS_IBHoursToday= 0;
+	$CS_ZDHoursToday = 0;
+	$CS_OtherHoursToday = 0;
+	$CS_percentIBToday = 0;
+	$CS_percentICToday = 0;
+	$CS_percentOtherToday = 0;
+	$CS_percentZDToday = 0;
+	
+	 foreach( $focusCSSinceToday as $focus ) {
+
+        for ($i = 4; $i < 16; $i++) {
+			if ($focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+				$CS_totalHoursToday++;
+			}
+		}
+		
+		for ($i = 4; $i < 16; $i++) {
+			if (startsWith($focus[$i], 'IB/')) {
+				//echo $focus[$i]."<br />";
+				$CS_IBHoursToday++;
+			}
+		}
+		
+		for ($i = 4; $i < 16; $i++) {
+			if (startsWith($focus[$i], 'IC/')) {
+				$CS_ICHoursToday++;
+			}
+		}
+		
+		for ($i = 4; $i < 16; $i++) {
+			if (startsWith($focus[$i], 'ZD/')) {
+				$CS_ZDHoursToday++;
+			}
+		}
+		
+		for ($i = 4; $i < 16; $i++) {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+				//echo $focus[$i]."<br />";
+				$CS_OtherHoursToday++;
+			}
+		}
+    }
+	
+	/* echo $CS_totalHoursToday."<br>";
+	echo $CS_ICHoursToday."<br>";
+	echo $CS_IBHoursToday."<br>";
+	echo $CS_ZDHoursToday."<br>";
+	echo $CS_OtherHoursToday."<br>";
+	echo $CS_percentIBToday."<br>";
+	echo $CS_percentICToday."<br>";
+	echo $CS_percentOtherToday."<br>";
+	echo $CS_percentZDToday."<br>"; */
+	
+	$CS_percentIBToday = number_format((float)(($CS_IBHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
+	$CS_percentICToday = number_format((float)(($CS_ICHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
+	$CS_percentOtherToday = number_format((float)(($CS_OtherHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
+	$CS_percentZDToday = number_format((float)(($CS_ZDHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
+	
+	echo '% CS spent on IB today: '.$CS_percentIBToday.'%<br>';
+	echo '% CS spent on ZD today: '.$CS_percentZDToday.'%<br>';
+	echo '% CS spent on IC today: '.$CS_percentICToday.'%<br>';
+	echo '% CS spent on Other Stuff today: '.$CS_percentOtherToday.'%<br>';
+	
+	echo '<h1>CS stats since start:</h1> <br><br>';
+	
+	$focusCSSinceStart = $wpdb->get_results( "SELECT * FROM cs_focus WHERE shift_date <= '". $shift_date ." 00:00:00'", ARRAY_N);
+	
+	$CS_totalHoursStart = 0;
+	$CS_ICHoursStart = 0;
+	$CS_IBHoursStart= 0;
+	$CS_ZDHoursStart = 0;
+	$CS_OtherHoursStart = 0;
+	$CS_percentIBStart = 0;
+	$CS_percentICStart = 0;
+	$CS_percentOtherStart = 0;
+	$CS_percentZDStart = 0;
+	
+	 foreach( $focusCSSinceStart as $focus ) {
+
+        for ($i = 4; $i < 16; $i++) {
+			if ($focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+				$CS_totalHoursStart++;
+			}
+		}
+		
+		for ($i = 4; $i < 16; $i++) {
+			if (startsWith($focus[$i], 'IB/')) {
+				//echo $focus[$i]."<br />";
+				$CS_IBHoursStart++;
+			}
+		}
+		
+		for ($i = 4; $i < 16; $i++) {
+			if (startsWith($focus[$i], 'IC/')) {
+				$CS_ICHoursStart++;
+			}
+		}
+		
+		for ($i = 4; $i < 16; $i++) {
+			if (startsWith($focus[$i], 'ZD/')) {
+				$CS_ZDHoursStart++;
+			}
+		}
+		
+		for ($i = 4; $i < 16; $i++) {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+				//echo $focus[$i]."<br />";
+				$CS_OtherHoursStart++;
+			}
+		}
+    }
+	
+	/* echo $CS_totalHoursStart."<br>";
+	echo $CS_ICHoursStart."<br>";
+	echo $CS_IBHoursStart."<br>";
+	echo $CS_ZDHoursStart."<br>";
+	echo $CS_OtherHoursStart."<br>";
+	echo $CS_percentIBStart."<br>";
+	echo $CS_percentICStart."<br>";
+	echo $CS_percentOtherStart."<br>";
+	echo $CS_percentZDStart."<br>"; */
+	
+	$CS_percentIBStart = number_format((float)(($CS_IBHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
+	$CS_percentICStart = number_format((float)(($CS_ICHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
+	$CS_percentOtherStart = number_format((float)(($CS_OtherHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
+	$CS_percentZDStart = number_format((float)(($CS_ZDHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
+	
+	echo '% CS spent on IB since start: '.$CS_percentIBStart.'%<br>';
+	echo '% CS spent on ZD since start: '.$CS_percentZDStart.'%<br>';
+	echo '% CS spent on IC since start: '.$CS_percentICStart.'%<br>';
+	echo '% CS spent on Other Stuff since start: '.$CS_percentOtherStart.'%<br>';
 
 // Total number of people currently on Inbound
 $totalIB = 0;
@@ -233,7 +411,7 @@ for ($i = 3; $i < $totalAgents; $i++) {
 	}
 }
 
-echo '<div style="padding-left: 30px; margin-top: 0px; padding-top: 10px; padding-bottom: 10px; background-color: #fcf7fc;"><ul><li>'.do_shortcode('[icon name="fa-phone"]').' Agents currently on IB: <strong>'. $totalIB. '</strong>';
+echo '<ul><li>'.do_shortcode('[icon name="fa-phone"]').' Agents currently on IB: <strong>'. $totalIB. '</strong>';
 
 
 if ($totalIB > 0) {

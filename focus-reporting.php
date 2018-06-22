@@ -98,15 +98,56 @@ if ($userID != 0) {
 	//echo "Today you're working from: ";
 	//echo $table['data'][$userID][1] .'pm <br />';
 	
-	$current_date = date("Y-m-d H:i:s");
+	$current_date = $date->format("Y-m-d H:i:s");
+	$shift_date = $date->format("Y-m-d");
 	
-	$wpdb->insert('cs_focus', array(
-    'agent_name' => 'Saad',
-    'focus' => 'IC/ZD',
-    'start_time' => '1pm',
-	'end_time' => '2pm',
-	'date_created' => $current_date,
-));
+	for ($i = 3; $i < $totalAgents; $i++) {
+		
+		// First check to see if there is already an entry for the day
+		$focus = $wpdb->get_row( "SELECT * FROM cs_focus WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
+		
+		// Insert into DB if brand new day
+		if ($table['data'][$i][0] != '' && $table['data'][$i][1] != '' && !$focus) {
+			$wpdb->insert('cs_focus', array(
+				'agent_name' => strtolower($table['data'][$i][0]),
+				'shift_date' => $shift_date,
+				'shift_time' => $table['data'][$i][1],
+				'focus_8am' => $table['data'][$i][3],
+				'focus_9am' => $table['data'][$i][4],
+				'focus_10am' => $table['data'][$i][5],
+				'focus_11am' => $table['data'][$i][6],
+				'focus_12pm' => $table['data'][$i][7],
+				'focus_1pm' => $table['data'][$i][8],
+				'focus_2pm' => $table['data'][$i][9],
+				'focus_3pm' => $table['data'][$i][10],
+				'focus_4pm' => $table['data'][$i][11],
+				'focus_5pm' => $table['data'][$i][12],
+				'focus_6pm' => $table['data'][$i][13],
+				'focus_7pm' => $table['data'][$i][14],
+				'date_created' => $current_date,
+				'updated' => 0,
+			));
+		}
+		// TODO: only update every x minutes
+		else if ($focus && $focus->agent_name == strtolower($table['data'][$i][0])) {
+			$wpdb->query("UPDATE cs_focus SET 
+			focus_8am = '".$table['data'][$i][3]."',
+			focus_9am = '".$table['data'][$i][4]."',
+			focus_10am = '".$table['data'][$i][5]."',
+			focus_11am = '".$table['data'][$i][6]."',
+			focus_12pm = '".$table['data'][$i][8]."',
+			focus_1pm = '".$table['data'][$i][8]."',
+			focus_2pm = '".$table['data'][$i][9]."',
+			focus_3pm = '".$table['data'][$i][10]."',
+			focus_4pm = '".$table['data'][$i][11]."',
+			focus_5pm = '".$table['data'][$i][12]."',
+			focus_6pm = '".$table['data'][$i][13]."',
+			focus_7pm = '".$table['data'][$i][14]."',
+			updated = '1'
+			WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
+		}
+	
+	}
 
 	// Print Current Focus
 

@@ -81,7 +81,60 @@ $agentExt = array (
 							'missy' => '1056',
 							'rachel' => '1001',
 );
-	
+
+$current_date = $date->format("Y-m-d H:i:s");
+$shift_date = $date->format("Y-m-d");
+
+/* Store Updated Focus Data into database */
+/* TODO: make it not execute on every request lol */
+for ($i = 3; $i < $totalAgents; $i++) {
+
+  // First check to see if there is already an entry for the day
+  $focus = $wpdb->get_row( "SELECT * FROM cs_focus WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
+
+  // Insert into DB if brand new day
+  if ($table['data'][$i][0] != '' && $table['data'][$i][1] != '' && !$focus) {
+    $wpdb->insert('cs_focus', array(
+      'agent_name' => strtolower($table['data'][$i][0]),
+      'shift_date' => $shift_date,
+      'shift_time' => $table['data'][$i][1],
+      'focus_8am' => $table['data'][$i][3],
+      'focus_9am' => $table['data'][$i][4],
+      'focus_10am' => $table['data'][$i][5],
+      'focus_11am' => $table['data'][$i][6],
+      'focus_12pm' => $table['data'][$i][7],
+      'focus_1pm' => $table['data'][$i][8],
+      'focus_2pm' => $table['data'][$i][9],
+      'focus_3pm' => $table['data'][$i][10],
+      'focus_4pm' => $table['data'][$i][11],
+      'focus_5pm' => $table['data'][$i][12],
+      'focus_6pm' => $table['data'][$i][13],
+      'focus_7pm' => $table['data'][$i][14],
+      'date_created' => $current_date,
+      'updated' => 0,
+    ));
+  }
+  //TODO: only update every x minutes
+  else if ($focus && $focus->agent_name == strtolower($table['data'][$i][0])) {
+    $wpdb->query("UPDATE cs_focus SET
+    focus_8am = '".$table['data'][$i][3]."',
+    focus_9am = '".$table['data'][$i][4]."',
+    focus_10am = '".$table['data'][$i][5]."',
+    focus_11am = '".$table['data'][$i][6]."',
+    focus_12pm = '".$table['data'][$i][7]."',
+    focus_1pm = '".$table['data'][$i][8]."',
+    focus_2pm = '".$table['data'][$i][9]."',
+    focus_3pm = '".$table['data'][$i][10]."',
+    focus_4pm = '".$table['data'][$i][11]."',
+    focus_5pm = '".$table['data'][$i][12]."',
+    focus_6pm = '".$table['data'][$i][13]."',
+    focus_7pm = '".$table['data'][$i][14]."',
+    updated = '1'
+    WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
+  }
+
+}
+
 if ($userID != 0) {
 
 	echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><strong>'.do_shortcode('[icon name="fa-sun-o"]').' How\'s my day looking? '. $table['data'][$userID][1] .'pm</strong></div>';
@@ -115,11 +168,11 @@ if ($userID != 0) {
 	}
 	else if ($currentFocus != '') {
 		echo '<center><h2>'. do_shortcode('[icon name="fa-arrow-circle-right"]'). ' Your Current Focus: <strong>'.$currentFocus. '</strong></h2></center>';
-		
+
 		if (strpos($currentFocus, 'IB') !== false || $username == "Saad") {
 			echo $special;
 		}
-		
+
 		echo '<br />';
 	}
 	else {
@@ -135,17 +188,17 @@ if ($userID != 0) {
 	}
 	else if ($upcomingFocus == "TM") {
 		echo 'Get ready! You\'re about to have an awesome team meeting!<br />';
-	} 
+	}
 	else if ($currentFocus != '' && $upcomingFocus == '') {
 		echo ''.do_shortcode('[icon name="fa-check"]').' Great job! You\'re almost done for the day! Don\'t forget to fill out your <a href="https://docs.google.com/spreadsheets/u/2/d/1Spu8BRAPDjOr1F3iQ_pMqWnxIJB4_kZIB5eIcGDPeGg/edit#gid=317380563" target="_blank">task hours</a>!<br />';
 	}
-	
+
 	echo '<br />';
 
 	// Print Lunch
 	$lunchKey = array_search('LNCH', $table['data'][$userID]);
-	
-	
+
+
 	if ($lunchKey != 0 && $currentHour < $tableTimes[$colTimesRowStart[$lunchKey]]) {
 		echo 'Your Lunch Time: <strong>'.$colTimesRowStart[$lunchKey]. '</strong><br /><br />';
 	}
@@ -154,12 +207,12 @@ if ($userID != 0) {
 
 	if ($teamMeetingKey != '' && $currentHour < $tableTimes[$colTimesRowStart[$teamMeetingKey]]) {
 		echo '<span style="color: red">*Don\'t forget, you have a team meeting today at <strong>'.$colTimesRowStart[$teamMeetingKey].'</strong></span><br /><br />';
-		
+
 		if ($dayOfWeek == 'Fri') {
 			echo '<span style="color: red">** Please fill out the <a href="https://docs.google.com/spreadsheets/u/2/d/1sYEUpfr-xXhEK58b6ns5MTMgbQry-oXN9zkvqfvRqSw/edit?ouid=104196470359843284937&usp=sheets_home&ths=true" target="_blank">Friday-Wrap Up</a> before the meeting as well :)</span><br /><br />';
 		}
 	}
-	
+
 	echo '<br /><center><p><i><span style="color: black; font-size: 11px;">Page Last Updated: '. $lastUpdated .'</span></i></p></center><br />';
 
 	echo '</div>';
@@ -192,7 +245,7 @@ if ($totalIB > 0) {
 		}
 	}
 	echo '</ol>';
-	
+
 }
 echo '</li><br />';
 
@@ -219,7 +272,7 @@ if ($totalZD > 0) {
 		}
 	}
 	echo '</ol>';
-	
+
 }
 echo '</li><br />';
 
@@ -246,7 +299,7 @@ if ($totalIC > 0) {
 		}
 	}
 	echo '</ol>';
-	
+
 }
 echo '</li><br />';
 
@@ -273,7 +326,7 @@ if ($totalHiring > 0) {
 		}
 	}
 	echo '</ol>';
-	
+
 }
 echo '</li><br />';
 
@@ -300,7 +353,7 @@ if ($totalACT > 0) {
 		}
 	}
 	echo '</ol>';
-	
+
 }
 echo '</li><br />';
 
@@ -327,7 +380,7 @@ if ($totalLNCH > 0) {
 		}
 	}
 	echo '</ol>';
-	
+
 }
 echo '</li></ul></div><br /><br /><br /><br /><br /><br />';
 

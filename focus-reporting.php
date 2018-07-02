@@ -11,81 +11,15 @@ function startsWith($haystack, $needle)
 
 $current_user = wp_get_current_user();
 $username = $current_user->user_login;
-$userID = 0;
-$special = '<center><div style="color: white; width: 300px; background-color: rgba(255, 0, 0, 0.6); padding: 5px; font-size: 11px;">'.do_shortcode('[icon name="fa-exclamation-triangle"]').'<i> We have a new question of the Month: <b>IF you could add a new feature to homebase, what would it be?</b> (<a href="https://docs.google.com/forms/d/e/1FAIpQLSeOuugdw7fVeu9FGwJoylsbAKiIO33OEkRb0NV32T9qkA5mQA/viewform" target="_blank">Submit Form</a>)</i></div></center>';
 
 $table = TablePress::$model_table->load( 4, true, false );
 
 $totalAgents = count($table['data']);
-$colTimes = count($table['data'][2]);
-$colTimesRowStart = $table['data'][2];
-
-for ($i = 3; $i < $totalAgents; $i++) {
-	if (strtolower($table['data'][$i][0]) == strtolower($username)) {
-		$userID = $i;
-	}
-}
 
 $date = new DateTime(null, new DateTimeZone(date_default_timezone_get()));
 $date->setTimeZone(new DateTimeZone('America/Chicago'));
-$currentHour = $date->format('G');
 $lastUpdated = $date->format('g:i a');
-$dayOfWeek = $date->format('D');
-$current_date = $date->format("Y-m-d H:i:s");
 $shift_date = $date->format("Y-m-d");
-
-$tableTimes = array (
-							'8' => '8a',
-							'9' => '9a',
-							'10' => '10a',
-							'11' => '11a',
-							'12' => '12p',
-							'13' => '1p',
-							'14' => '2p',
-							'15' => '3p',
-							'16' => '4p',
-							'17' => '5p',
-							'18' => '6p',
-							'19' => '7p',
-							'8a' => '8',
-							'9a' => '9',
-							'10a' => '10',
-							'11a' => '11',
-							'12p' => '12',
-							'1p' => '13',
-							'2p' => '14',
-							'3p' => '15',
-							'4p' => '16',
-							'5p' => '17',
-							'6p' => '18',
-							'7p' => '19',
-);
-
-$agentExt = array (
-							'saad' => '1000',
-							'mariam' => '1004',
-							'david' => '1009',
-							'ryan' => '1013',
-							'cindy' => '1017',
-							'ciara' => '1018',
-							'alexander' => '1023',
-							'chris' => '1024',
-							'liza' => '1029',
-							'rosvy' => '1031',
-							'molly' => '1036',
-							'brandon' => '1037',
-							'cat' => '1039',
-							'doc' => '1041',
-							'daveen' => '1042',
-							'kyle' => '1045',
-							'katarina' => '1046',
-							'bridgette' => '1049',
-							'connie' => '1051',
-							'dexter' => '1053',
-							'daniel' => '1054',
-							'missy' => '1056',
-							'rachel' => '1001',
-);
 
 //if ($userID != 0) {
 
@@ -120,6 +54,7 @@ $agentExt = array (
 		$TrainerHoursToday = 0;
 		$TraineeHoursToday = 0;
 		$TCHoursToday = 0;
+		$TMHoursToday = 0;
 		$OtherHoursToday = 0;
 		$percentIBToday = 0;
 		$percentICToday = 0;
@@ -132,11 +67,12 @@ $agentExt = array (
 		$percentTrainerToday = 0;
 		$percentTraineeToday = 0;
 		$percentTCToday = 0;
+		$percentTMToday = 0;
 
 		$otherItemsListToday = array();
 
 		for ($i = 4; $i < 16; $i++) {
-			if ($focusToday[$i] != '' && $focusToday[$i] != 'TM' && $focusToday[$i] != 'LNCH') {
+			if ($focusToday[$i] != '' && $focusToday[$i] != 'LNCH') {
 				//echo $focusToday[$i]."<br />";
 				$totalHoursToday++;
 			}
@@ -204,6 +140,12 @@ $agentExt = array (
 		}
 
 		for ($i = 4; $i < 16; $i++) {
+      if ($focusToday[$i] == 'TM') {
+				$TMHoursToday++;
+			}
+		}
+
+		for ($i = 4; $i < 16; $i++) {
 			if (!startsWith($focusToday[$i], 'IC/') && !startsWith($focusToday[$i], 'IB/') && !startsWith($focusToday[$i], 'ZD/') && $focusToday[$i] != '' && $focusToday[$i] != 'TM' && $focusToday[$i] != 'LNCH' && !startsWith($focusToday[$i], 'H/') && !startsWith($focusToday[$i], 'ACT/O') && !startsWith($focusToday[$i], 'TT') && !startsWith($focusToday[$i], 'TR') && $focusToday[$i] != 'ACT' && $focusToday[$i] != 'O' && $focusToday[$i] != 'TC') {
 				//echo $focusToday[$i]."<br />";
 				$OtherHoursToday++;
@@ -225,9 +167,9 @@ $agentExt = array (
 		echo $percentOtherToday."<br>";
 		echo $percentZDToday."<br>"; */
 
-		if (($ICHoursToday + $IBHoursToday + $ZDHoursToday + $HiringHoursToday + $ACTHoursToday + $ACTOHoursToday + $OpenHoursToday + $TrainerHoursToday + $TraineeHoursToday + $OtherHoursToday + $TCHoursToday) != $totalHoursToday) {
-			echo 'Error: hours aren\'t matching up for today\'s stats';
-		}
+		// if (($ICHoursToday + $IBHoursToday + $ZDHoursToday + $HiringHoursToday + $ACTHoursToday + $ACTOHoursToday + $OpenHoursToday + $TrainerHoursToday + $TraineeHoursToday + $OtherHoursToday + $TCHoursToday) != $totalHoursToday) {
+		// 	echo 'Error: hours aren\'t matching up for today\'s stats';
+		// }
 
 		$percentIBToday = number_format((float)(($IBHoursToday / $totalHoursToday) * 100), 2, '.', '');
 		$percentICToday = number_format((float)(($ICHoursToday / $totalHoursToday) * 100), 2, '.', '');
@@ -240,6 +182,7 @@ $agentExt = array (
 		$percentTraineeToday = number_format((float)(($TraineeHoursToday / $totalHoursToday) * 100), 2, '.', '');
 		$percentTrainerToday = number_format((float)(($TrainerHoursToday / $totalHoursToday) * 100), 2, '.', '');
 		$percentTCToday = number_format((float)(($TCHoursToday / $totalHoursToday) * 100), 2, '.', '');
+		$percentTMToday = number_format((float)(($TMHoursToday / $totalHoursToday) * 100), 2, '.', '');
 
 		if ($IBHoursToday != 0) {
 			echo '<h5>IB ('.$percentIBToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$IBHoursToday.' / '.$totalHoursToday.' hours]</span><br><br>';
@@ -268,8 +211,11 @@ $agentExt = array (
 		if ($TraineeHoursToday != 0) {
 			echo '<h5>Trainees (TT): ('.$percentTraineeToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$TraineeHoursToday.' / '.$totalHoursToday.' hours]</span><br><br>';
 		}
-		if ($TraineeHoursToday != 0) {
+		if ($TCHoursToday != 0) {
 			echo '<h5>Training Call (TC): ('.$percentTCToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$TCHoursToday.' / '.$totalHoursToday.' hours]</span><br><br>';
+		}
+		if ($TMHoursToday != 0) {
+			echo '<h5>Training Call (TC): ('.$percentTMToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$TMHoursToday.' / '.$totalHoursToday.' hours]</span><br><br>';
 		}
 		if ($OtherHoursToday != 0) {
 			echo '<h5>Other:  ('.$percentOtherToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$OtherHoursToday.' / '.$totalHoursToday.' hours]</span>';
@@ -300,6 +246,7 @@ $agentExt = array (
 		$OpenHoursThisWeek = 0;
 		$OtherHoursThisWeek = 0;
 		$TCHoursThisWeek = 0;
+    $TMHoursThisWeek = 0;
 		$percentIBThisWeek = 0;
 		$percentICThisWeek = 0;
 		$percentOtherThisWeek = 0;
@@ -311,13 +258,14 @@ $agentExt = array (
 		$percentTrainerThisWeek = 0;
 		$percentTraineeThisWeek = 0;
 		$percentTCThisWeek = 0;
+		$percentTMThisWeek = 0;
 
 		$otherItemsListThisWeek = array();
 
 		 foreach( $focusSinceThisWeek as $focus ) {
 
 			for ($i = 4; $i < 16; $i++) {
-				if ($focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+				if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 					//echo $focus[$i]."<br />";
 					$totalHoursThisWeek++;
 				}
@@ -384,6 +332,12 @@ $agentExt = array (
 				}
 			}
 
+      for ($i = 4; $i < 16; $i++) {
+				if ($focus[$i] == 'TM') {
+					$ACTOHoursThisWeek++;
+				}
+			}
+
 			for ($i = 4; $i < 16; $i++) {
 				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
@@ -407,9 +361,9 @@ $agentExt = array (
 		echo $percentOtherThisWeek."<br>";
 		echo $percentZDThisWeek."<br>"; */
 
-		if (($ICHoursThisWeek + $IBHoursThisWeek + $ZDHoursThisWeek + $HiringHoursThisWeek + $ACTHoursThisWeek + $ACTOHoursThisWeek + $OpenHoursThisWeek + $OtherHoursThisWeek + $TrainerHoursThisWeek + $TraineeHoursThisWeek + $TCHoursThisWeek) != $totalHoursThisWeek) {
-			echo 'Error: hours aren\'t matching up for stats for the ThisWeek';
-		}
+		// if (($ICHoursThisWeek + $IBHoursThisWeek + $ZDHoursThisWeek + $HiringHoursThisWeek + $ACTHoursThisWeek + $ACTOHoursThisWeek + $OpenHoursThisWeek + $OtherHoursThisWeek + $TrainerHoursThisWeek + $TraineeHoursThisWeek + $TCHoursThisWeek) != $totalHoursThisWeek) {
+		// 	echo 'Error: hours aren\'t matching up for stats for the ThisWeek';
+		// }
 
 		$percentIBThisWeek = number_format((float)(($IBHoursThisWeek / $totalHoursThisWeek) * 100), 2, '.', '');
 		$percentICThisWeek = number_format((float)(($ICHoursThisWeek / $totalHoursThisWeek) * 100), 2, '.', '');
@@ -423,6 +377,7 @@ $agentExt = array (
 		$percentTraineeThisWeek = number_format((float)(($TraineeHoursThisWeek / $totalHoursThisWeek) * 100), 2, '.', '');
 
 		$percentTCThisWeek = number_format((float)(($TCHoursThisWeek / $totalHoursThisWeek) * 100), 2, '.', '');
+		$percentTMThisWeek = number_format((float)(($TMHoursThisWeek / $totalHoursThisWeek) * 100), 2, '.', '');
 
 		if ($IBHoursThisWeek != 0) {
 			echo '<h5>IB ('.$percentIBThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$IBHoursThisWeek.' / '.$totalHoursThisWeek.' hours]</span><br><br>';
@@ -454,6 +409,9 @@ $agentExt = array (
 		if ($TCHoursThisWeek != 0) {
 			echo '<h5>Training Call (TC): ('.$percentTCThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$TCHoursThisWeek.' / '.$totalHoursThisWeek.' hours]</span><br><br>';
 		}
+		if ($TMHoursThisWeek != 0) {
+			echo '<h5>Team Meeting (TM): ('.$percentTMThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$TMHoursThisWeek.' / '.$totalHoursThisWeek.' hours]</span><br><br>';
+		}
 		if ($OtherHoursThisWeek != 0) {
 			echo '<h5>Other:  ('.$percentOtherThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$OtherHoursThisWeek.' / '.$totalHoursThisWeek.' hours]</span>';
 
@@ -484,6 +442,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		$OpenHoursWeek = 0;
 		$OtherHoursWeek = 0;
 		$TCHoursWeek = 0;
+		$TMHoursWeek = 0;
 		$percentIBWeek = 0;
 		$percentICWeek = 0;
 		$percentOtherWeek = 0;
@@ -495,13 +454,14 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		$percentTrainerWeek = 0;
 		$percentTraineeWeek = 0;
 		$percentTCWeek = 0;
+		$percentTMWeek = 0;
 
 		$otherItemsListWeek = array();
 
 		 foreach( $focusSinceWeek as $focus ) {
 
 			for ($i = 4; $i < 16; $i++) {
-				if ($focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+				if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 					//echo $focus[$i]."<br />";
 					$totalHoursWeek++;
 				}
@@ -569,6 +529,12 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 			}
 
 			for ($i = 4; $i < 16; $i++) {
+				if (startsWith($focus[$i], 'TM')) {
+					$TMHoursWeek++;
+				}
+			}
+
+			for ($i = 4; $i < 16; $i++) {
 				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
 					$OtherHoursWeek++;
@@ -591,9 +557,9 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		echo $percentOtherWeek."<br>";
 		echo $percentZDWeek."<br>"; */
 
-		if (($ICHoursWeek + $IBHoursWeek + $ZDHoursWeek + $HiringHoursWeek + $ACTHoursWeek + $ACTOHoursWeek + $OpenHoursWeek + $OtherHoursWeek + $TrainerHoursWeek + $TraineeHoursWeek + $TCHoursWeek) != $totalHoursWeek) {
-			echo 'Error: hours aren\'t matching up for stats for the week';
-		}
+		// if (($ICHoursWeek + $IBHoursWeek + $ZDHoursWeek + $HiringHoursWeek + $ACTHoursWeek + $ACTOHoursWeek + $OpenHoursWeek + $OtherHoursWeek + $TrainerHoursWeek + $TraineeHoursWeek + $TCHoursWeek) != $totalHoursWeek) {
+		// 	echo 'Error: hours aren\'t matching up for stats for the week';
+		// }
 
 		$percentIBWeek = number_format((float)(($IBHoursWeek / $totalHoursWeek) * 100), 2, '.', '');
 		$percentICWeek = number_format((float)(($ICHoursWeek / $totalHoursWeek) * 100), 2, '.', '');
@@ -605,6 +571,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		$percentOpenWeek = number_format((float)(($OpenHoursWeek / $totalHoursWeek) * 100), 2, '.', '');
 		$percentTrainerWeek = number_format((float)(($TrainerHoursWeek / $totalHoursWeek) * 100), 2, '.', '');
 		$percentTraineeWeek = number_format((float)(($TraineeHoursWeek / $totalHoursWeek) * 100), 2, '.', '');
+		$percentTMWeek = number_format((float)(($TMHoursWeek / $totalHoursWeek) * 100), 2, '.', '');
 
 		$percentTCWeek = number_format((float)(($TCHoursWeek / $totalHoursWeek) * 100), 2, '.', '');
 
@@ -638,6 +605,9 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		if ($TCHoursWeek != 0) {
 			echo '<h5>Training Call (TC): ('.$percentTCWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$TCHoursWeek.' / '.$totalHoursWeek.' hours]</span><br><br>';
 		}
+		if ($TMHoursWeek != 0) {
+			echo '<h5>Team Meeting (TM): ('.$percentTMWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$TMHoursWeek.' / '.$totalHoursWeek.' hours]</span><br><br>';
+		}
 		if ($OtherHoursWeek != 0) {
 			echo '<h5>Other:  ('.$percentOtherWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$OtherHoursWeek.' / '.$totalHoursWeek.' hours]</span>';
 
@@ -669,6 +639,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		$TCHoursStart = 0;
 		$TrainerHoursStart = 0;
 		$TraineeHoursStart = 0;
+		$TMHoursStart = 0;
 		$percentIBStart = 0;
 		$percentICStart = 0;
 		$percentOtherStart = 0;
@@ -679,13 +650,14 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		$percentACTOStart = 0;
 		$percentTrainerStart = 0;
 		$percentTraineeStart = 0;
+		$percentTMStart = 0;
 
 		$otherItemsListStart = array();
 
 		foreach( $focusSinceStart as $focus ) {
 
 			for ($i = 4; $i < 16; $i++) {
-				if ($focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+				if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 					//echo $focus[$i]."<br />";
 					$totalHoursStart++;
 				}
@@ -753,6 +725,12 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 			}
 
 			for ($i = 4; $i < 16; $i++) {
+        if ($focus[$i] == 'TM') {
+					$TMHoursStart++;
+				}
+			}
+
+			for ($i = 4; $i < 16; $i++) {
 				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
 					$otherItemsListStart[] = $focus[$i];
@@ -775,9 +753,9 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		echo $percentOtherStart."<br>";
 		echo $percentZDStart."<br>"; */
 
-		if (($ICHoursStart + $IBHoursStart + $ZDHoursStart + $HiringHoursStart + $ACTHoursStart + $ACTOHoursStart + $OpenHoursStart + $OtherHoursStart + $TraineeHoursStart + $TrainerHoursStart + $TCHoursStart) != $totalHoursStart) {
-			echo 'Error: hours aren\'t matching up for all time stats';
-		}
+		// if (($ICHoursStart + $IBHoursStart + $ZDHoursStart + $HiringHoursStart + $ACTHoursStart + $ACTOHoursStart + $OpenHoursStart + $OtherHoursStart + $TraineeHoursStart + $TrainerHoursStart + $TCHoursStart) != $totalHoursStart) {
+		// 	echo 'Error: hours aren\'t matching up for all time stats';
+		// }
 
 		$percentIBStart = number_format((float)(($IBHoursStart / $totalHoursStart) * 100), 2, '.', '');
 		$percentICStart = number_format((float)(($ICHoursStart / $totalHoursStart) * 100), 2, '.', '');
@@ -790,6 +768,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		$percentTrainerStart = number_format((float)(($TrainerHoursStart / $totalHoursStart) * 100), 2, '.', '');
 		$percentTraineeStart = number_format((float)(($TraineeHoursStart / $totalHoursStart) * 100), 2, '.', '');
 		$percentTCStart = number_format((float)(($TCHoursStart / $totalHoursStart) * 100), 2, '.', '');
+		$percentTMStart = number_format((float)(($TMHoursStart / $totalHoursStart) * 100), 2, '.', '');
 
 		if ($IBHoursStart != 0) {
 			echo '<h5>IB ('.$percentIBStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$IBHoursStart.' / '.$totalHoursStart.' hours]</span><br><br>';
@@ -820,6 +799,9 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		}
 		if ($TCHoursStart != 0) {
 			echo '<h5>Training Call (TC): ('.$percentTCStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$TCHoursStart.' / '.$totalHoursStart.' hours]</span><br><br>';
+		}
+		if ($TMHoursStart != 0) {
+			echo '<h5>Team Meeting (TM): ('.$percentTMStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$TMHoursStart.' / '.$totalHoursStart.' hours]</span><br><br>';
 		}
 		if ($OtherHoursStart != 0) {
 			echo '<h5>Other:  ('.$percentOtherStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$OtherHoursStart.' / '.$totalHoursStart.' hours]</span>';
@@ -857,6 +839,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	$CS_TraineeHoursToday = 0;
 	$CS_OtherHoursToday = 0;
 	$CS_TCHoursToday = 0;
+	$CS_TMHoursToday = 0;
 	$CS_percentIBToday = 0;
 	$CS_percentICToday = 0;
 	$CS_percentOtherToday = 0;
@@ -874,7 +857,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	 foreach( $focusCSSinceToday as $focus ) {
 
         for ($i = 4; $i < 16; $i++) {
-			if ($focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+			if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 				//echo $focus[$i]."<br />";
 				$CS_totalHoursToday++;
 			}
@@ -942,6 +925,12 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 		}
 
 		for ($i = 4; $i < 16; $i++) {
+      if ($focus[$i] == 'TM') {
+				$CS_TMHoursToday++;
+			}
+		}
+
+		for ($i = 4; $i < 16; $i++) {
 			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursToday++;
@@ -964,9 +953,9 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	echo $CS_percentOtherToday."<br>";
 	echo $CS_percentZDToday."<br>"; */
 
-	if (($CS_ICHoursToday + $CS_IBHoursToday + $CS_ZDHoursToday + $CS_HiringHoursToday + $CS_ACTHoursToday + $CS_ACTOHoursToday + $CS_OpenHoursToday + $CS_OtherHoursToday + $CS_TrainerHoursToday + $CS_TraineeHoursToday + $CS_TCHoursToday) != $CS_totalHoursToday) {
-		echo 'Error: hours aren\'t matching up for today\'s stats';
-	}
+	// if (($CS_ICHoursToday + $CS_IBHoursToday + $CS_ZDHoursToday + $CS_HiringHoursToday + $CS_ACTHoursToday + $CS_ACTOHoursToday + $CS_OpenHoursToday + $CS_OtherHoursToday + $CS_TrainerHoursToday + $CS_TraineeHoursToday + $CS_TCHoursToday) != $CS_totalHoursToday) {
+	// 	echo 'Error: hours aren\'t matching up for today\'s stats';
+	// }
 
 	$CS_percentIBToday = number_format((float)(($CS_IBHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
 	$CS_percentICToday = number_format((float)(($CS_ICHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
@@ -979,6 +968,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	$CS_percentTrainerToday = number_format((float)(($CS_TrainerHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
 	$CS_percentTraineeToday = number_format((float)(($CS_TraineeHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
 	$CS_percentTCToday = number_format((float)(($CS_TCHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
+	$CS_percentTMToday = number_format((float)(($CS_TMHoursToday / $CS_totalHoursToday) * 100), 2, '.', '');
 
 	echo '<h5>IB ('.$CS_percentIBToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_IBHoursToday.' / '.$CS_totalHoursToday.' hours]</span><br><br>';
 	echo '<h5>ZD: ('.$CS_percentZDToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_ZDHoursToday.' / '.$CS_totalHoursToday.' hours]</span><br><br>';
@@ -990,6 +980,9 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	echo '<h5>Trainer (TR): ('.$CS_percentTrainerToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TrainerHoursToday.' / '.$CS_totalHoursToday.' hours]</span><br><br>';
 	echo '<h5>Trainee (TT): ('.$CS_percentTraineeToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TraineeHoursToday.' / '.$CS_totalHoursToday.' hours]</span><br><br>';
 	echo '<h5>Training Call (TC): ('.$CS_percentTCToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TCHoursToday.' / '.$CS_totalHoursToday.' hours]</span><br><br>';
+  if ($CS_TMHoursToday != 0) {
+    echo '<h5>Team Meeting (TM): ('.$CS_percentTMToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TMHoursToday.' / '.$CS_totalHoursToday.' hours]</span><br><br>';
+  }
 	if ($CS_OtherHoursToday != 0) {
 		echo '<h5>Other:  ('.$CS_percentOtherToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_OtherHoursToday.' / '.$CS_totalHoursToday.' hours]</span>';
 
@@ -1019,6 +1012,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	$CS_TrainerHoursThisWeek = 0;
 	$CS_TraineeHoursThisWeek = 0;
 	$CS_TCHoursThisWeek = 0;
+	$CS_TMHoursThisWeek = 0;
 	$CS_percentIBThisWeek = 0;
 	$CS_percentICThisWeek = 0;
 	$CS_percentOtherThisWeek = 0;
@@ -1028,13 +1022,14 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	$CS_percentOpenThisWeek = 0;
 	$CS_percentACTOThisWeek = 0;
 	$CS_percentTCThisWeek = 0;
+	$CS_percentTMThisWeek = 0;
 
 	$CS_otherItemsListThisWeek = array();
 
 	 foreach( $focusCSSinceThisWeek as $focus ) {
 
         for ($i = 4; $i < 16; $i++) {
-			if ($focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+			if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 				//echo $focus[$i]."<br />";
 				$CS_totalHoursThisWeek++;
 			}
@@ -1102,6 +1097,12 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 		}
 
 		for ($i = 4; $i < 16; $i++) {
+      if ($focus[$i] == 'TM') {
+				$CS_TMHoursThisWeek++;
+			}
+		}
+
+		for ($i = 4; $i < 16; $i++) {
 			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursThisWeek++;
@@ -1139,6 +1140,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	$CS_percentTrainerThisWeek = number_format((float)(($CS_TrainerHoursThisWeek / $CS_totalHoursThisWeek) * 100), 2, '.', '');
 	$CS_percentTraineeThisWeek = number_format((float)(($CS_TraineeHoursThisWeek / $CS_totalHoursThisWeek) * 100), 2, '.', '');
 	$CS_percentTCThisWeek = number_format((float)(($CS_TCHoursThisWeek / $CS_totalHoursThisWeek) * 100), 2, '.', '');
+	$CS_percentTMThisWeek = number_format((float)(($CS_TMHoursThisWeek / $CS_totalHoursThisWeek) * 100), 2, '.', '');
 
 	echo '<h5>IB ('.$CS_percentIBThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_IBHoursThisWeek.' / '.$CS_totalHoursThisWeek.' hours]</span><br><br>';
 	echo '<h5>ZD: ('.$CS_percentZDThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_ZDHoursThisWeek.' / '.$CS_totalHoursThisWeek.' hours]</span><br><br>';
@@ -1150,6 +1152,9 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	echo '<h5>Trainer (TR): ('.$CS_percentTrainerThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TrainerHoursThisWeek.' / '.$CS_totalHoursThisWeek.' hours]</span><br><br>';
 	echo '<h5>Trainee (TT): ('.$CS_percentTraineeThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TraineeHoursThisWeek.' / '.$CS_totalHoursThisWeek.' hours]</span><br><br>';
 	echo '<h5>Training Call (TC): ('.$CS_percentTCThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TCHoursThisWeek.' / '.$CS_totalHoursThisWeek.' hours]</span><br><br>';
+  if ($CS_TMHoursThisWeek != 0) {
+  	echo '<h5>Team Meeting (TM): ('.$CS_percentTMThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TMHoursThisWeek.' / '.$CS_totalHoursThisWeek.' hours]</span><br><br>';
+  }
 	if ($CS_OtherHoursThisWeek != 0) {
 		echo '<h5>Other:  ('.$CS_percentOtherThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_OtherHoursThisWeek.' / '.$CS_totalHoursThisWeek.' hours]</span>';
 
@@ -1181,6 +1186,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	$CS_TrainerHoursLastWeek = 0;
 	$CS_TraineeHoursLastWeek = 0;
 	$CS_TCHoursLastWeek = 0;
+	$CS_TMHoursLastWeek = 0;
 	$CS_percentIBLastWeek = 0;
 	$CS_percentICLastWeek = 0;
 	$CS_percentOtherLastWeek = 0;
@@ -1190,13 +1196,14 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	$CS_percentOpenLastWeek = 0;
 	$CS_percentACTOLastWeek = 0;
 	$CS_percentTCLastWeek = 0;
+	$CS_percentTMLastWeek = 0;
 
 	$CS_otherItemsListLastWeek = array();
 
 	 foreach( $focusCSSinceLastWeek as $focus ) {
 
         for ($i = 4; $i < 16; $i++) {
-			if ($focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+			if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 				//echo $focus[$i]."<br />";
 				$CS_totalHoursLastWeek++;
 			}
@@ -1264,6 +1271,12 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		}
 
 		for ($i = 4; $i < 16; $i++) {
+      if ($focus[$i] == 'TM') {
+				$CS_TMHoursLastWeek++;
+			}
+		}
+
+		for ($i = 4; $i < 16; $i++) {
 			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursLastWeek++;
@@ -1286,9 +1299,9 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	echo $CS_percentOtherLastWeek."<br>";
 	echo $CS_percentZDLastWeek."<br>"; */
 
-	if (($CS_ICHoursLastWeek + $CS_IBHoursLastWeek + $CS_ZDHoursLastWeek + $CS_HiringHoursLastWeek + $CS_ACTHoursLastWeek + $CS_ACTOHoursLastWeek + $CS_OpenHoursLastWeek + $CS_OtherHoursLastWeek + $CS_TrainerHoursLastWeek + $CS_TraineeHoursLastWeek + $CS_TCHoursLastWeek) != $CS_totalHoursLastWeek) {
+	/* if (($CS_ICHoursLastWeek + $CS_IBHoursLastWeek + $CS_ZDHoursLastWeek + $CS_HiringHoursLastWeek + $CS_ACTHoursLastWeek + $CS_ACTOHoursLastWeek + $CS_OpenHoursLastWeek + $CS_OtherHoursLastWeek + $CS_TrainerHoursLastWeek + $CS_TraineeHoursLastWeek + $CS_TCHoursLastWeek) != $CS_totalHoursLastWeek) {
 		echo 'Error: hours aren\'t matching up for stats for the LastWeek';
-	}
+	} */
 
 	$CS_percentIBLastWeek = number_format((float)(($CS_IBHoursLastWeek / $CS_totalHoursLastWeek) * 100), 2, '.', '');
 	$CS_percentICLastWeek = number_format((float)(($CS_ICHoursLastWeek / $CS_totalHoursLastWeek) * 100), 2, '.', '');
@@ -1301,6 +1314,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	$CS_percentTrainerLastWeek = number_format((float)(($CS_TrainerHoursLastWeek / $CS_totalHoursLastWeek) * 100), 2, '.', '');
 	$CS_percentTraineeLastWeek = number_format((float)(($CS_TraineeHoursLastWeek / $CS_totalHoursLastWeek) * 100), 2, '.', '');
 	$CS_percentTCLastWeek = number_format((float)(($CS_TCHoursLastWeek / $CS_totalHoursLastWeek) * 100), 2, '.', '');
+	$CS_percentTMLastWeek = number_format((float)(($CS_TMHoursLastWeek / $CS_totalHoursLastWeek) * 100), 2, '.', '');
 
 	echo '<h5>IB ('.$CS_percentIBLastWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_IBHoursLastWeek.' / '.$CS_totalHoursLastWeek.' hours]</span><br><br>';
 	echo '<h5>ZD: ('.$CS_percentZDLastWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_ZDHoursLastWeek.' / '.$CS_totalHoursLastWeek.' hours]</span><br><br>';
@@ -1312,6 +1326,9 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	echo '<h5>Trainer (TR): ('.$CS_percentTrainerLastWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TrainerHoursLastWeek.' / '.$CS_totalHoursLastWeek.' hours]</span><br><br>';
 	echo '<h5>Trainee (TT): ('.$CS_percentTraineeLastWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TraineeHoursLastWeek.' / '.$CS_totalHoursLastWeek.' hours]</span><br><br>';
 	echo '<h5>Training Call (TC): ('.$CS_percentTCLastWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TCHoursLastWeek.' / '.$CS_totalHoursLastWeek.' hours]</span><br><br>';
+  if ($CS_TMHoursLastWeek != 0) {
+  	echo '<h5>Team Meeting (TM): ('.$CS_percentTMLastWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TMHoursLastWeek.' / '.$CS_totalHoursLastWeek.' hours]</span><br><br>';
+  }
 	if ($CS_OtherHoursLastWeek != 0) {
 		echo '<h5>Other:  ('.$CS_percentOtherLastWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_OtherHoursLastWeek.' / '.$CS_totalHoursLastWeek.' hours]</span>';
 
@@ -1342,6 +1359,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	$CS_TrainerHoursStart = 0;
 	$CS_TraineeHoursStart = 0;
 	$CS_TCHoursStart = 0;
+	$CS_TMHoursStart = 0;
 	$CS_percentIBStart = 0;
 	$CS_percentICStart = 0;
 	$CS_percentOtherStart = 0;
@@ -1353,13 +1371,14 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	$CS_percentTrainerStart = 0;
 	$CS_percentTraineeStart = 0;
 	$CS_percentTCStart = 0;
+	$CS_percentTMStart = 0;
 
 	$CS_otherItemsListStart = array();
 
 	 foreach( $focusCSSinceStart as $focus ) {
 
         for ($i = 4; $i < 16; $i++) {
-			if ($focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH') {
+			if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 				//echo $focus[$i]."<br />";
 				$CS_totalHoursStart++;
 			}
@@ -1427,6 +1446,12 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		}
 
 		for ($i = 4; $i < 16; $i++) {
+      if ($focus[$i] == 'TM') {
+				$CS_TMHoursStart++;
+			}
+		}
+
+		for ($i = 4; $i < 16; $i++) {
 			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursStart++;
@@ -1449,9 +1474,9 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	echo $CS_percentOtherStart."<br>";
 	echo $CS_percentZDStart."<br>"; */
 
-	if (($CS_ICHoursStart + $CS_IBHoursStart + $CS_ZDHoursStart + $CS_HiringHoursStart + $CS_ACTHoursStart + $CS_ACTOHoursStart + $CS_OpenHoursStart + $CS_OtherHoursStart + $CS_TrainerHoursStart + $CS_TraineeHoursStart + $CS_TCHoursStart) != $CS_totalHoursStart) {
+	/* if (($CS_ICHoursStart + $CS_IBHoursStart + $CS_ZDHoursStart + $CS_HiringHoursStart + $CS_ACTHoursStart + $CS_ACTOHoursStart + $CS_OpenHoursStart + $CS_OtherHoursStart + $CS_TrainerHoursStart + $CS_TraineeHoursStart + $CS_TCHoursStart) != $CS_totalHoursStart) {
 		echo 'Error: hours aren\'t matching up for stats since start';
-	}
+	} */
 
 	$CS_percentIBStart = number_format((float)(($CS_IBHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
 	$CS_percentICStart = number_format((float)(($CS_ICHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
@@ -1464,6 +1489,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	$CS_percentTrainerStart = number_format((float)(($CS_TrainerHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
 	$CS_percentTraineeStart = number_format((float)(($CS_TraineeHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
 	$CS_percentTCStart = number_format((float)(($CS_TCHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
+	$CS_percentTMStart = number_format((float)(($CS_TMHoursStart / $CS_totalHoursStart) * 100), 2, '.', '');
 
 	echo '<h5>IB ('.$CS_percentIBStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_IBHoursStart.' / '.$CS_totalHoursStart.' hours]</span><br><br>';
 	echo '<h5>ZD: ('.$CS_percentZDStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_ZDHoursStart.' / '.$CS_totalHoursStart.' hours]</span><br><br>';
@@ -1475,6 +1501,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	echo '<h5>Trainer (TR): ('.$CS_percentTrainerStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TrainerHoursStart.' / '.$CS_totalHoursStart.' hours]</span><br><br>';
 	echo '<h5>Trainee (TT): ('.$CS_percentTraineeStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TraineeHoursStart.' / '.$CS_totalHoursStart.' hours]</span><br><br>';
 	echo '<h5>Training Call (TC): ('.$CS_percentTCStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TCHoursStart.' / '.$CS_totalHoursStart.' hours]</span><br><br>';
+	echo '<h5>Team Meeting (TM): ('.$CS_percentTMStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_TMHoursStart.' / '.$CS_totalHoursStart.' hours]</span><br><br>';
 	if ($CS_OtherHoursStart != 0) {
 		echo '<h5>Other:  ('.$CS_percentOtherStart.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_OtherHoursStart.' / '.$CS_totalHoursStart.' hours]</span>';
 

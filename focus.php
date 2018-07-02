@@ -80,6 +80,8 @@ $agentExt = array (
 							'daniel' => '1054',
 							'missy' => '1056',
 							'rachel' => '1001',
+							'joe' => '1044',
+							'ashlee' => '1043',
 );
 
 $current_date = $date->format("Y-m-d H:i:s");

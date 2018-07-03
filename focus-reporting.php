@@ -1123,9 +1123,9 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	echo $CS_percentOtherThisWeek."<br>";
 	echo $CS_percentZDThisWeek."<br>"; */
 
-	if (($CS_ICHoursThisWeek + $CS_IBHoursThisWeek + $CS_ZDHoursThisWeek + $CS_HiringHoursThisWeek + $CS_ACTHoursThisWeek + $CS_ACTOHoursThisWeek + $CS_OpenHoursThisWeek + $CS_OtherHoursThisWeek + $CS_TrainerHoursThisWeek + $CS_TraineeHoursThisWeek + $CS_TCHoursThisWeek) != $CS_totalHoursThisWeek) {
+/*	if (($CS_ICHoursThisWeek + $CS_IBHoursThisWeek + $CS_ZDHoursThisWeek + $CS_HiringHoursThisWeek + $CS_ACTHoursThisWeek + $CS_ACTOHoursThisWeek + $CS_OpenHoursThisWeek + $CS_OtherHoursThisWeek + $CS_TrainerHoursThisWeek + $CS_TraineeHoursThisWeek + $CS_TCHoursThisWeek) != $CS_totalHoursThisWeek) {
 		echo 'Error: hours aren\'t matching up for stats for the ThisWeek';
-	}
+	} */
 
 	$CS_percentIBThisWeek = number_format((float)(($CS_IBHoursThisWeek / $CS_totalHoursThisWeek) * 100), 2, '.', '');
 	$CS_percentICThisWeek = number_format((float)(($CS_ICHoursThisWeek / $CS_totalHoursThisWeek) * 100), 2, '.', '');

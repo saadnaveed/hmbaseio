@@ -198,6 +198,13 @@ $shift_date = $date->format("Y-m-d");
 
 //if ($userID != 0) {
 
+// Make sure only administrators can access this page
+
+if (!current_user_can( 'administrator')) {
+  echo 'Sorry, you need to be an administrator to access this page.';
+  return;
+}
+
 echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><strong>'.do_shortcode('[icon agent="fa-search-plus"]').' CS Manager Reports</strong></div>';
 
 	/***** CS REPORT This Week ******/

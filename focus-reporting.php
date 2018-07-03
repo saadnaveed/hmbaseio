@@ -41,8 +41,6 @@ $shift_date = $date->format("Y-m-d");
 
 		$focusToday = $wpdb->get_row( "SELECT * FROM cs_focus WHERE agent_name = '".$username."' AND shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
 
-		print_r($focusToday);
-
 		$totalHoursToday = 0;
 		$ICHoursToday = 0;
 		$IBHoursToday= 0;
@@ -215,7 +213,7 @@ $shift_date = $date->format("Y-m-d");
 			echo '<h5>Training Call (TC): ('.$percentTCToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$TCHoursToday.' / '.$totalHoursToday.' hours]</span><br><br>';
 		}
 		if ($TMHoursToday != 0) {
-			echo '<h5>Training Call (TC): ('.$percentTMToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$TMHoursToday.' / '.$totalHoursToday.' hours]</span><br><br>';
+			echo '<h5>Team Meeting (TM): ('.$percentTMToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$TMHoursToday.' / '.$totalHoursToday.' hours]</span><br><br>';
 		}
 		if ($OtherHoursToday != 0) {
 			echo '<h5>Other:  ('.$percentOtherToday.'%) </h5><span style="color: gray; font-size: 10px;">['.$OtherHoursToday.' / '.$totalHoursToday.' hours]</span>';
@@ -1158,13 +1156,13 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	if ($CS_OtherHoursThisWeek != 0) {
 		echo '<h5>Other:  ('.$CS_percentOtherThisWeek.'%) </h5><span style="color: gray; font-size: 10px;">['.$CS_OtherHoursThisWeek.' / '.$CS_totalHoursThisWeek.' hours]</span>';
 
-		/* echo '<div style="padding-left: 30px; color: gray; font-size: 10px;"><ul>';
+		echo '<div style="padding-left: 30px; color: gray; font-size: 10px;"><ul>';
 
 		for ($i = 0; $i < count($CS_otherItemsListThisWeek); $i++) {
 			echo '<li>'.$CS_otherItemsListThisWeek[$i].'</li>';
 		}
 
-		echo '</ul></div>'; */
+		echo '</ul></div>';
 		echo '<br><br>';
 	}
 

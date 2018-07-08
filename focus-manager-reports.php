@@ -29,7 +29,7 @@ function processFocus($focusType, &$agentInfoType, $key) {
         }
 
         if (startsWith($focusType[$j][$z], 'H/')) {
-          $agentInfoType[$key]['IBHours']++;
+          $agentInfoType[$key]['HiringHours']++;
         }
 
         if ($focusType[$j][$z] == 'ACT') {
@@ -310,6 +310,8 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 
   echo '<form method="post" action="/manager-reports">
     <select name="agentName">';
+
+    sort($agentNamesArray);
 for ($i = 0; $i < count($agentNamesArray); $i++) {
   //echo "<option value=".$agentNamesArray[$i][0].">".$agentNamesArray[$i][0]."</option>";
   echo "<option ".selected($_POST['agentName'], $agentNamesArray[$i][0])."value=".$agentNamesArray[$i][0].">".$agentNamesArray[$i][0]."</option>";
@@ -354,7 +356,7 @@ for ($i = 0; $i < count($agentNamesArray); $i++) {
          }
          else if ($_POST['type'] == 'Last Week') {
 
-           $focus = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE agent_name = '".$_POST['agentName']."' AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
+           $focus = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE agent_name = '".$_POST['agentName']."' AND shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
            //print_r($focus);
            $key = array_search($_POST['agentName'], array_column($agentInfoLastWeek, 'agent'));

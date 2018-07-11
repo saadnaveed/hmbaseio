@@ -14,7 +14,7 @@ $useragent = $current_user->user_login;
 $userID = 0;
 $special = '<center><div style="color: white; width: 300px; background-color: rgba(255, 0, 0, 0.6); padding: 5px; font-size: 11px;">'.do_shortcode('[icon agent="fa-exclamation-triangle"]').'<i> We have a new question of the Month: <b>IF you could add a new feature to homebase, what would it be?</b> (<a href="https://docs.google.com/forms/d/e/1FAIpQLSeOuugdw7fVeu9FGwJoylsbAKiIO33OEkRb0NV32T9qkA5mQA/viewform" target="_blank">Submit Form</a>)</i></div></center>';
 
-$table = TablePress::$model_table->load( 4, true, false );
+$table = TablePress::$model_table->load( 12, true, false );
 
 $totalAgents = count($table['data']);
 $colTimes = count($table['data'][2]);
@@ -43,7 +43,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	/***** CS REPORT This Week ******/
 	echo '<div style="padding-left: 30px; margin-top: 0px; padding-top: 10px; padding-bottom: 10px; background-color: #fcf7fc;"><div style="background-color: black; color: white; padding-left: 10px;"><h1>This Week</h1></div>';
 
-	$focusCSSinceThisWeek = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE YEARWEEK(`shift_date`, 1) = YEARWEEK(CURDATE(), 1)", ARRAY_N);
+	$focusCSSinceThisWeek = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE YEARWEEK(`shift_date`, 1) = YEARWEEK(CURDATE(), 1)", ARRAY_N);
 
 	$agentInfo = array();
 
@@ -75,7 +75,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
   //       for ($z = 4; $z < 16; $z++) {
   //         if (startsWith($focusSinceThisWeek[$i][$z], 'IB/')) {
   //   				//echo $focusToday[$i]."<br />";
-  //   				$agentInfo[$focusCSSinceThisWeek[$i][1]]['IBHoursThisWeek']++;
+  //   				$agentInfo[$focusCSSinceThisWeek[$i][1]]['IBHoursThisWeek'] += 0.5;
   //   			}
   //       }
   //     }
@@ -94,8 +94,8 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
       startsWith($focusCSSinceThisWeek[$j][$z], 'O') ||
     startsWith($focusCSSinceThisWeek[$j][$z], 'TR') ||
   startsWith($focusCSSinceThisWeek[$j][$z], 'TC')) {
-            $agentInfo[$i]['TaskHours']++;
-            $totalCSTaskHours++;
+            $agentInfo[$i]['TaskHours'] += 0.5;
+            $totalCSTaskHours += 0.5;
           }
         }
       }

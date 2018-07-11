@@ -10,59 +10,60 @@ function startsWith($haystack, $needle)
 }
 
 function processFocus($focusType, &$agentInfoType, $key) {
+  $dbCols = 28;
   for ($j = 0; $j < count($focusType); $j++) {
-      for ($z = 4; $z < 16; $z++) {
+      for ($z = 4; $z < $dbCols; $z++) {
         if ($focusType[$j][$z] != '' && $focusType[$j][$z] != 'LNCH') {
-          $agentInfoType[$key]['TotalHours']++;
+          $agentInfoType[$key]['TotalHours'] += 0.5;
         }
 
         if (startsWith($focusType[$j][$z], 'IB/')) {
-          $agentInfoType[$key]['IBHours']++;
+          $agentInfoType[$key]['IBHours'] += 0.5;
         }
 
         if (startsWith($focusType[$j][$z], 'IC/')) {
-          $agentInfoType[$key]['ICHours']++;
+          $agentInfoType[$key]['ICHours'] += 0.5;
         }
 
         if (startsWith($focusType[$j][$z], 'ZD/')) {
-          $agentInfoType[$key]['ZDHours']++;
+          $agentInfoType[$key]['ZDHours'] += 0.5;
         }
 
         if (startsWith($focusType[$j][$z], 'H/')) {
-          $agentInfoType[$key]['HiringHours']++;
+          $agentInfoType[$key]['HiringHours'] += 0.5;
         }
 
         if ($focusType[$j][$z] == 'ACT') {
-          $agentInfoType[$key]['ACTHours']++;
+          $agentInfoType[$key]['ACTHours'] += 0.5;
         }
 
         if ($focusType[$j][$z] == 'ACT/O') {
-          $agentInfoType[$key]['ACTOHours']++;
+          $agentInfoType[$key]['ACTOHours'] += 0.5;
         }
 
         if (startsWith($focusType[$j][$z], 'O')) {
-          $agentInfoType[$key]['OpenHours']++;
+          $agentInfoType[$key]['OpenHours'] += 0.5;
         }
 
         if (startsWith($focusType[$j][$z], 'TR')) {
-          $agentInfoType[$key]['TrainerHours']++;
+          $agentInfoType[$key]['TrainerHours'] += 0.5;
         }
 
         if (startsWith($focusType[$j][$z], 'TT')) {
-          $agentInfoType[$key]['TraineeHours']++;
+          $agentInfoType[$key]['TraineeHours'] += 0.5;
         }
 
         if (startsWith($focusType[$j][$z], 'TC')) {
-          $agentInfoType[$key]['TCHours']++;
+          $agentInfoType[$key]['TCHours'] += 0.5;
         }
 
         if ($focusType[$j][$z] == 'TM') {
-          $agentInfoType[$key]['TMHours']++;
+          $agentInfoType[$key]['TMHours'] += 0.5;
         }
 
         if (!startsWith($focusType[$j][$z], 'IC/') && !startsWith($focusType[$j][$z], 'IB/') && !startsWith($focusType[$j][$z], 'ZD/') && $focusType[$j][$z] != '' && $focusType[$j][$z] != 'TM' && $focusType[$j][$z] != 'LNCH' && !startsWith($focusType[$j][$z], 'H/') && !startsWith($focusType[$j][$z], 'ACT/O') && !startsWith($focusType[$j][$z], 'TT') && !startsWith($focusType[$j][$z], 'TR') && $focusType[$j][$z] != 'ACT' && $focusType[$j][$z] != 'O' && $focusType[$j][$z] != 'TC') {
           //echo $focusType[$i]."<br />";
-          $agentInfoType[$key]['OtherHours']++;
+          $agentInfoType[$key]['OtherHours'] += 0.5;
           $otherItemsListThisWeek[] = $focusType[$j][$z];
           $agentInfoType[$key]['OtherHoursList'][] = $focusType[$j][$z];
         }
@@ -175,7 +176,7 @@ $useragent = $current_user->user_login;
 $userID = 0;
 $special = '<center><div style="color: white; width: 300px; background-color: rgba(255, 0, 0, 0.6); padding: 5px; font-size: 11px;">'.do_shortcode('[icon agent="fa-exclamation-triangle"]').'<i> We have a new question of the Month: <b>IF you could add a new feature to homebase, what would it be?</b> (<a href="https://docs.google.com/forms/d/e/1FAIpQLSeOuugdw7fVeu9FGwJoylsbAKiIO33OEkRb0NV32T9qkA5mQA/viewform" target="_blank">Submit Form</a>)</i></div></center>';
 
-$table = TablePress::$model_table->load( 4, true, false );
+$table = TablePress::$model_table->load( 12, true, false );
 
 $totalAgents = count($table['data']);
 $colTimes = count($table['data'][2]);
@@ -210,7 +211,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	/***** CS REPORT This Week ******/
 	echo '<div style="padding-left: 30px; margin-top: 0px; padding-top: 10px; padding-bottom: 10px; background-color: #fcf7fc;">';
 
-  $agentNamesArray = $wpdb->get_results( "select DISTINCT agent_name from cs_focus", ARRAY_N);
+  $agentNamesArray = $wpdb->get_results( "select DISTINCT agent_name from cs_focus_new", ARRAY_N);
 
 	$agentInfoThisWeek = array();
   $agentInfoLastWeek = array();
@@ -296,10 +297,10 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
   //   echo $indexFound;
   //     //echo $focusCSSinceThisWeek[$i][1].'='.$agentInfo[$indexFound]['agent'];
   //     for ($j = 0; $j < count($focusCSSinceThisWeek[$i]); $j++) {
-  //       for ($z = 4; $z < 16; $z++) {
+  //       for ($z = 4; $z < $dbCols; $z++) {
   //         if (startsWith($focusSinceThisWeek[$i][$z], 'IB/')) {
   //   				//echo $focusToday[$i]."<br />";
-  //   				$agentInfo[$focusCSSinceThisWeek[$i][1]]['IBHoursThisWeek']++;
+  //   				$agentInfo[$focusCSSinceThisWeek[$i][1]]['IBHoursThisWeek'] += 0.5;
   //   			}
   //       }
   //     }
@@ -308,10 +309,11 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
   //print_r($focusCSSinceThisWeek[0][1]);
   //$totalCSTaskHours = 0;
 
-  echo '<form method="post" action="/manager-reports">
+  echo '<form method="post" action="/focus-manager-reports-update">
     <select name="agentName">';
 
     sort($agentNamesArray);
+
 for ($i = 0; $i < count($agentNamesArray); $i++) {
   //echo "<option value=".$agentNamesArray[$i][0].">".$agentNamesArray[$i][0]."</option>";
   echo "<option ".selected($_POST['agentName'], $agentNamesArray[$i][0])."value=".$agentNamesArray[$i][0].">".$agentNamesArray[$i][0]."</option>";
@@ -333,7 +335,7 @@ for ($i = 0; $i < count($agentNamesArray); $i++) {
 
        if ($_POST['type'] == 'This Week') {
 
-         $focus = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE agent_name = '".$_POST['agentName']."' AND YEARWEEK(`shift_date`, 1) = YEARWEEK(CURDATE(), 1)", ARRAY_N);
+         $focus = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$_POST['agentName']."' AND YEARWEEK(`shift_date`, 1) = YEARWEEK(CURDATE(), 1)", ARRAY_N);
 
          $key = array_search($_POST['agentName'], array_column($agentInfoThisWeek, 'agent'));
 
@@ -344,7 +346,7 @@ for ($i = 0; $i < count($agentNamesArray); $i++) {
         }
         else if ($_POST['type'] == 'Today') {
 
-          $focus = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE agent_name = '".$_POST['agentName']."' AND shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
+          $focus = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$_POST['agentName']."' AND shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
 
           //print_r($focus);
           $key = array_search($_POST['agentName'], array_column($agentInfoToday, 'agent'));
@@ -356,7 +358,7 @@ for ($i = 0; $i < count($agentNamesArray); $i++) {
          }
          else if ($_POST['type'] == 'Last Week') {
 
-           $focus = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE agent_name = '".$_POST['agentName']."' AND shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
+           $focus = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$_POST['agentName']."' AND shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
            //print_r($focus);
            $key = array_search($_POST['agentName'], array_column($agentInfoLastWeek, 'agent'));
@@ -368,7 +370,7 @@ for ($i = 0; $i < count($agentNamesArray); $i++) {
           }
           else if ($_POST['type'] == 'All Time') {
 
-            $focus = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE agent_name = '".$_POST['agentName']."' AND shift_date <= '". $shift_date ." 00:00:00'", ARRAY_N);
+            $focus = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$_POST['agentName']."' AND shift_date <= '". $shift_date ." 00:00:00'", ARRAY_N);
 
             //print_r($focus);
             $key = array_search($_POST['agentName'], array_column($agentInfoAllTime, 'agent'));

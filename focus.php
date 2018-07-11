@@ -6,12 +6,17 @@ function startsWith($haystack, $needle)
      return (substr($haystack, 0, $length) === $needle);
 }
 
+/* Returns true if the time is in range of the focus or equals it */
+function checkFocusTimes($currentTime, $focusTime, $nextFocusTime) {
+  return (strtotime($focusTime) < strtotime($currentTime) && strtotime($currentTime) < strtotime($nextFocusTime) || strtotime($focusTime) == strtotime($currentTime));
+}
+
 $current_user = wp_get_current_user();
 $username = $current_user->user_login;
 $userID = 0;
 $special = '<center><div style="color: white; width: 300px; background-color: rgba(255, 0, 0, 0.6); padding: 5px; font-size: 11px;">'.do_shortcode('[icon name="fa-exclamation-triangle"]').'<i> We have a new question of the Month: <b>IF you could add a new feature to homebase, what would it be?</b> (<a href="https://docs.google.com/forms/d/e/1FAIpQLSeOuugdw7fVeu9FGwJoylsbAKiIO33OEkRb0NV32T9qkA5mQA/viewform" target="_blank">Submit Form</a>)</i></div></center>';
 
-$table = TablePress::$model_table->load( 4, true, false );
+$table = TablePress::$model_table->load( 12, true, false );
 
 $totalAgents = count($table['data']);
 $colTimes = count($table['data'][2]);
@@ -25,36 +30,9 @@ for ($i = 3; $i < $totalAgents; $i++) {
 
 $date = new DateTime(null, new DateTimeZone(date_default_timezone_get()));
 $date->setTimeZone(new DateTimeZone('America/Chicago'));
-$currentHour = $date->format('G');
+$currentHour = $date->format('g:i a');
 $lastUpdated = $date->format('g:i a');
 $dayOfWeek = $date->format('D');
-
-$tableTimes = array (
-							'8' => '8a',
-							'9' => '9a',
-							'10' => '10a',
-							'11' => '11a',
-							'12' => '12p',
-							'13' => '1p',
-							'14' => '2p',
-							'15' => '3p',
-							'16' => '4p',
-							'17' => '5p',
-							'18' => '6p',
-							'19' => '7p',
-							'8a' => '8',
-							'9a' => '9',
-							'10a' => '10',
-							'11a' => '11',
-							'12p' => '12',
-							'1p' => '13',
-							'2p' => '14',
-							'3p' => '15',
-							'4p' => '16',
-							'5p' => '17',
-							'6p' => '18',
-							'7p' => '19',
-);
 
 $agentExt = array (
 							'saad' => '1000',
@@ -92,45 +70,69 @@ $shift_date = $date->format("Y-m-d");
 for ($i = 3; $i < $totalAgents; $i++) {
 
   // First check to see if there is already an entry for the day
-  $focus = $wpdb->get_row( "SELECT * FROM cs_focus WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
+  $focus = $wpdb->get_row( "SELECT * FROM cs_focus_new WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
 
   // Insert into DB if brand new day
   if ($table['data'][$i][0] != '' && $table['data'][$i][1] != '' && !$focus) {
-    $wpdb->insert('cs_focus', array(
+    $wpdb->insert('cs_focus_new', array(
       'agent_name' => strtolower($table['data'][$i][0]),
       'shift_date' => $shift_date,
       'shift_time' => $table['data'][$i][1],
       'focus_8am' => $table['data'][$i][3],
-      'focus_9am' => $table['data'][$i][4],
-      'focus_10am' => $table['data'][$i][5],
-      'focus_11am' => $table['data'][$i][6],
-      'focus_12pm' => $table['data'][$i][7],
-      'focus_1pm' => $table['data'][$i][8],
-      'focus_2pm' => $table['data'][$i][9],
-      'focus_3pm' => $table['data'][$i][10],
-      'focus_4pm' => $table['data'][$i][11],
-      'focus_5pm' => $table['data'][$i][12],
-      'focus_6pm' => $table['data'][$i][13],
-      'focus_7pm' => $table['data'][$i][14],
+      'focus_830am' => $table['data'][$i][4],
+      'focus_9am' => $table['data'][$i][5],
+      'focus_930am' => $table['data'][$i][6],
+      'focus_10am' => $table['data'][$i][7],
+      'focus_1030am' => $table['data'][$i][8],
+      'focus_11am' => $table['data'][$i][9],
+      'focus_1130am' => $table['data'][$i][10],
+      'focus_12pm' => $table['data'][$i][11],
+      'focus_1230pm' => $table['data'][$i][12],
+      'focus_1pm' => $table['data'][$i][13],
+      'focus_130pm' => $table['data'][$i][14],
+      'focus_2pm' => $table['data'][$i][15],
+      'focus_230pm' => $table['data'][$i][16],
+      'focus_3pm' => $table['data'][$i][17],
+      'focus_330pm' => $table['data'][$i][18],
+      'focus_4pm' => $table['data'][$i][19],
+      'focus_430pm' => $table['data'][$i][20],
+      'focus_5pm' => $table['data'][$i][21],
+      'focus_530pm' => $table['data'][$i][22],
+      'focus_6pm' => $table['data'][$i][23],
+      'focus_630pm' => $table['data'][$i][24],
+      'focus_7pm' => $table['data'][$i][25],
+      'focus_730pm' => $table['data'][$i][26],
       'date_created' => $current_date,
       'updated' => 0,
     ));
   }
   //TODO: only update every x minutes
   else if ($focus && $focus->agent_name == strtolower($table['data'][$i][0])) {
-    $wpdb->query("UPDATE cs_focus SET
+    $wpdb->query("UPDATE cs_focus_new SET
     focus_8am = '".$table['data'][$i][3]."',
-    focus_9am = '".$table['data'][$i][4]."',
-    focus_10am = '".$table['data'][$i][5]."',
-    focus_11am = '".$table['data'][$i][6]."',
-    focus_12pm = '".$table['data'][$i][7]."',
-    focus_1pm = '".$table['data'][$i][8]."',
-    focus_2pm = '".$table['data'][$i][9]."',
-    focus_3pm = '".$table['data'][$i][10]."',
-    focus_4pm = '".$table['data'][$i][11]."',
-    focus_5pm = '".$table['data'][$i][12]."',
-    focus_6pm = '".$table['data'][$i][13]."',
-    focus_7pm = '".$table['data'][$i][14]."',
+    focus_830am = '".$table['data'][$i][4]."',
+    focus_9am = '".$table['data'][$i][5]."',
+    focus_930am = '".$table['data'][$i][6]."',
+    focus_10am = '".$table['data'][$i][7]."',
+    focus_1030am = '".$table['data'][$i][8]."',
+    focus_11am = '".$table['data'][$i][9]."',
+    focus_1130am = '".$table['data'][$i][10]."',
+    focus_12pm = '".$table['data'][$i][11]."',
+    focus_1230pm = '".$table['data'][$i][12]."',
+    focus_1pm = '".$table['data'][$i][13]."',
+    focus_130pm = '".$table['data'][$i][14]."',
+    focus_2pm = '".$table['data'][$i][15]."',
+    focus_230pm = '".$table['data'][$i][16]."',
+    focus_3pm = '".$table['data'][$i][17]."',
+    focus_330pm = '".$table['data'][$i][18]."',
+    focus_4pm = '".$table['data'][$i][19]."',
+    focus_430pm = '".$table['data'][$i][20]."',
+    focus_5pm = '".$table['data'][$i][21]."',
+    focus_530pm = '".$table['data'][$i][22]."',
+    focus_6pm = '".$table['data'][$i][23]."',
+    focus_630pm = '".$table['data'][$i][24]."',
+    focus_7pm = '".$table['data'][$i][25]."',
+    focus_730pm = '".$table['data'][$i][26]."',
     updated = '1'
     WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
   }
@@ -156,10 +158,18 @@ if ($userID != 0) {
 	$upcomingFocus = '';
 
 	for ($i = 3; $i < $colTimes; $i++) {
-		if ($colTimesRowStart[$i] == $tableTimes[$currentHour]) {
-			$currentFocus = $table['data'][$userID][$i];
-			$upcomingFocus = $table['data'][$userID][$i+1];
-		}
+    if (strtotime($colTimesRowStart[$i]) < strtotime($currentHour)) {
+      if (strtotime($currentHour) < strtotime($colTimesRowStart[$i+1])) {
+        $currentFocus = $table['data'][$userID][$i];
+        $upcomingFocus = $table['data'][$userID][$i+1];
+        break;
+      }
+    }
+    else if (strtotime($colTimesRowStart[$i]) == strtotime($currentHour)) {
+      $currentFocus = $table['data'][$userID][$i];
+      $upcomingFocus = $table['data'][$userID][$i+1];
+      break;
+    }
 	}
 
 	if ($currentFocus == "LNCH") {
@@ -182,13 +192,13 @@ if ($userID != 0) {
 	}
 
 	// Print Upcoming Focus
-	if ($upcomingFocus != '' && $upcomingFocus != 'LNCH' && upcomingFocus != 'TM') {
+	if (($upcomingFocus != '' && $upcomingFocus != 'LNCH' && $upcomingFocus != 'TM') || ($currentFocus == 'LNCH' && $upcomingFocus != 'LNCH')) {
 		echo ''.do_shortcode('[icon name="fa-level-up"]').' Your Upcoming Focus: <strong>'. $upcomingFocus. '</strong><br />';
 	}
-	else if ($upcomingFocus == "LNCH") {
+	else if ($upcomingFocus == "LNCH" && $currentFocus != "LNCH") {
 		echo 'It\'s almost time for your lunch break! :)<br />';
 	}
-	else if ($upcomingFocus == "TM") {
+	else if ($upcomingFocus == "TM" && $currentFocus != 'TM') {
 		echo 'Get ready! You\'re about to have an awesome team meeting!<br />';
 	}
 	else if ($currentFocus != '' && $upcomingFocus == '') {
@@ -201,13 +211,13 @@ if ($userID != 0) {
 	$lunchKey = array_search('LNCH', $table['data'][$userID]);
 
 
-	if ($lunchKey != 0 && $currentHour < $tableTimes[$colTimesRowStart[$lunchKey]]) {
+	if ($lunchKey != 0 && strtotime($currentHour) < strtotime($colTimesRowStart[$lunchKey])) {
 		echo 'Your Lunch Time: <strong>'.$colTimesRowStart[$lunchKey]. '</strong><br /><br />';
 	}
 
 	$teamMeetingKey = array_search('TM', $table['data'][$userID]);
 
-	if ($teamMeetingKey != '' && $currentHour < $tableTimes[$colTimesRowStart[$teamMeetingKey]]) {
+	if ($teamMeetingKey != '' && strtotime($currentHour) < strtotime($colTimesRowStart[$teamMeetingKey])) {
 		echo '<span style="color: red">*Don\'t forget, you have a team meeting today at <strong>'.$colTimesRowStart[$teamMeetingKey].'</strong></span><br /><br />';
 
 		if ($dayOfWeek == 'Fri') {
@@ -219,16 +229,30 @@ if ($userID != 0) {
 
 	echo '</div>';
 
+  echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><strong>'.do_shortcode('[icon name="fa-search-plus"]').' My Day at a Glance</strong></div>';
+
+  echo '<div style="padding-left: 40px; margin-top: 0px; padding-top: 10px; padding-bottom: 10px; background-color: #fcf7fc;">';
+  for ($i = 3; $i < $colTimes; $i++) {
+    if ($table['data'][$userID][$i] != '') {
+        echo '<div style="width: 60px; background-color: black; color: white; font-size: 11px; text-align: center;"><strong>'.$colTimesRowStart[$i].'</strong></div>';
+        echo '<div style="width: 60px; background-color: gray; color: white; font-size: 10px; text-align: center;">'.$table['data'][$userID][$i].'</div>';
+        echo '<br>';
+      }
+  }
+
+  echo '</div>';
+
 }
 
 echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><strong>'.do_shortcode('[icon name="fa-search-plus"]').' CS Quick Glance</strong></div>';
+
 
 // Total number of people currently on Inbound
 $totalIB = 0;
 
 for ($i = 3; $i < $totalAgents; $i++) {
 	for ($j = 0; $j < $colTimes; $j++) {
-		if (startsWith($table['data'][$i][$j], 'IB/') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+		if (startsWith($table['data'][$i][$j], 'IB/') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 			$totalIB++;
 		}
 	}
@@ -241,7 +265,7 @@ if ($totalIB > 0) {
 	echo '<ol>';
 	for ($i = 3; $i < $totalAgents; $i++) {
 		for ($j = 0; $j < $colTimes; $j++) {
-			if (startsWith($table['data'][$i][$j], 'IB/') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+			if (startsWith($table['data'][$i][$j], 'IB/') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 				echo '<li>'. $table['data'][$i][0].' <span style="font-size: 9px;"><i>(x'.$agentExt[strtolower($table['data'][$i][0])].')</i></span></li>';
 			}
 		}
@@ -256,7 +280,7 @@ $totalZD = 0;
 
 for ($i = 0; $i <= $totalAgents; $i++) {
 	for ($j = 0; $j < $colTimes; $j++) {
-		if (startsWith($table['data'][$i][$j], 'ZD/') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+		if (startsWith($table['data'][$i][$j], 'ZD/') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 			$totalZD++;
 		}
 	}
@@ -268,7 +292,7 @@ if ($totalZD > 0) {
 	echo '<ol>';
 	for ($i = 3; $i < $totalAgents; $i++) {
 		for ($j = 0; $j < $colTimes; $j++) {
-			if (startsWith($table['data'][$i][$j], 'ZD/') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+			if (startsWith($table['data'][$i][$j], 'ZD/') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 				echo '<li>'. $table['data'][$i][0].'</li>';
 			}
 		}
@@ -283,7 +307,7 @@ $totalIC = 0;
 
 for ($i = 3; $i < $totalAgents; $i++) {
 	for ($j = 0; $j < $colTimes; $j++) {
-		if (startsWith($table['data'][$i][$j], 'IC/') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+		if (startsWith($table['data'][$i][$j], 'IC/') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 			$totalIC++;
 		}
 	}
@@ -295,7 +319,7 @@ if ($totalIC > 0) {
 	echo '<ol>';
 	for ($i = 3; $i < $totalAgents; $i++) {
 		for ($j = 0; $j < $colTimes; $j++) {
-			if (startsWith($table['data'][$i][$j], 'IC/') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+			if (startsWith($table['data'][$i][$j], 'IC/') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 				echo '<li>'. $table['data'][$i][0].'</li>';
 			}
 		}
@@ -310,7 +334,7 @@ $totalHiring = 0;
 
 for ($i = 3; $i < $totalAgents; $i++) {
 	for ($j = 0; $j < $colTimes; $j++) {
-		if (startsWith($table['data'][$i][$j], 'H/') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+		if (startsWith($table['data'][$i][$j], 'H/') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 			$totalHiring++;
 		}
 	}
@@ -322,7 +346,7 @@ if ($totalHiring > 0) {
 	echo '<ol>';
 	for ($i = 3; $i < $totalAgents; $i++) {
 		for ($j = 0; $j < $colTimes; $j++) {
-			if (startsWith($table['data'][$i][$j], 'H/') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+			if (startsWith($table['data'][$i][$j], 'H/') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 				echo '<li>'. $table['data'][$i][0].'</li>';
 			}
 		}
@@ -337,7 +361,7 @@ $totalACT = 0;
 
 for ($i = 3; $i < $totalAgents; $i++) {
 	for ($j = 0; $j < $colTimes; $j++) {
-		if (startsWith($table['data'][$i][$j], 'ACT') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+		if (startsWith($table['data'][$i][$j], 'ACT') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 			$totalACT++;
 		}
 	}
@@ -349,7 +373,7 @@ if ($totalACT > 0) {
 	echo '<ol>';
 	for ($i = 3; $i < $totalAgents; $i++) {
 		for ($j = 0; $j < $colTimes; $j++) {
-			if (startsWith($table['data'][$i][$j], 'ACT') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+			if (startsWith($table['data'][$i][$j], 'ACT') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 				echo '<li>'. $table['data'][$i][0].'</li>';
 			}
 		}
@@ -364,7 +388,7 @@ $totalLNCH = 0;
 
 for ($i = 3; $i < $totalAgents; $i++) {
 	for ($j = 0; $j < $colTimes; $j++) {
-		if (startsWith($table['data'][$i][$j], 'LNCH') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+		if (startsWith($table['data'][$i][$j], 'LNCH') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 			$totalLNCH++;
 		}
 	}
@@ -376,7 +400,7 @@ if ($totalLNCH > 0) {
 	echo '<ol>';
 	for ($i = 0; $i <= $totalAgents; $i++) {
 		for ($j = 0; $j < $colTimes; $j++) {
-			if (startsWith($table['data'][$i][$j], 'LNCH') && $colTimesRowStart[$j] == $tableTimes[$currentHour]) {
+			if (startsWith($table['data'][$i][$j], 'LNCH') && checkFocusTimes($currentHour, $colTimesRowStart[$j], $colTimesRowStart[$j+1])) {
 				echo '<li>'. $table['data'][$i][0].'</li>';
 			}
 		}
@@ -388,7 +412,7 @@ echo '</li></ul></div><br /><br /><br /><br /><br /><br />';
 
 /* if (strtolower($username) == 'saad') { */
 echo '<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />';
-	echo do_shortcode('[table id=4 /]');
+	echo do_shortcode('[table id=12 /]');
 
 
 ?>

@@ -12,7 +12,7 @@ function startsWith($haystack, $needle)
 $current_user = wp_get_current_user();
 $username = $current_user->user_login;
 
-$table = TablePress::$model_table->load( 4, true, false );
+$table = TablePress::$model_table->load( 12, true, false );
 
 $totalAgents = count($table['data']);
 
@@ -39,7 +39,7 @@ $shift_date = $date->format("Y-m-d");
 	if (strtolower($username) != 'jc' && strtolower($username) != 'rebecca' && strtolower($username) != 'alex' && strtolower($username) != 'greg' && strtolower($username) != 'amy') {
 		echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>Today</h1></div>';
 
-		$focusToday = $wpdb->get_row( "SELECT * FROM cs_focus WHERE agent_name = '".$username."' AND shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
+		$focusToday = $wpdb->get_row( "SELECT * FROM cs_focus_new WHERE agent_name = '".$username."' AND shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
 
 		$totalHoursToday = 0;
 		$ICHoursToday = 0;
@@ -69,84 +69,86 @@ $shift_date = $date->format("Y-m-d");
 
 		$otherItemsListToday = array();
 
-		for ($i = 4; $i < 16; $i++) {
+    $dbCols = 28;
+
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focusToday[$i] != '' && $focusToday[$i] != 'LNCH') {
 				//echo $focusToday[$i]."<br />";
-				$totalHoursToday++;
+				$totalHoursToday += 0.50;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focusToday[$i], 'IB/')) {
 				//echo $focusToday[$i]."<br />";
-				$IBHoursToday++;
+				$IBHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focusToday[$i], 'IC/')) {
-				$ICHoursToday++;
+				$ICHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focusToday[$i], 'ZD/')) {
-				$ZDHoursToday++;
+				$ZDHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focusToday[$i], 'H/')) {
-				$HiringHoursToday++;
+				$HiringHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focusToday[$i] == 'ACT') {
-				$ACTHoursToday++;
+				$ACTHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focusToday[$i] == 'ACT/O') {
-				$ACTOHoursToday++;
+				$ACTOHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focusToday[$i], 'O')) {
-				$OpenHoursToday++;
+				$OpenHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focusToday[$i], 'TR')) {
-				$TrainerHoursToday++;
+				$TrainerHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focusToday[$i], 'TT')) {
-				$TraineeHoursToday++;
+				$TraineeHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focusToday[$i], 'TC')) {
-				$TCHoursToday++;
+				$TCHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
       if ($focusToday[$i] == 'TM') {
-				$TMHoursToday++;
+				$TMHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (!startsWith($focusToday[$i], 'IC/') && !startsWith($focusToday[$i], 'IB/') && !startsWith($focusToday[$i], 'ZD/') && $focusToday[$i] != '' && $focusToday[$i] != 'TM' && $focusToday[$i] != 'LNCH' && !startsWith($focusToday[$i], 'H/') && !startsWith($focusToday[$i], 'ACT/O') && !startsWith($focusToday[$i], 'TT') && !startsWith($focusToday[$i], 'TR') && $focusToday[$i] != 'ACT' && $focusToday[$i] != 'O' && $focusToday[$i] != 'TC') {
 				//echo $focusToday[$i]."<br />";
-				$OtherHoursToday++;
+				$OtherHoursToday += 0.5;
 				$otherItemsListToday[] = $focusToday[$i];
 			}
 		}
@@ -230,7 +232,7 @@ $shift_date = $date->format("Y-m-d");
 		/**** YOUR THIS WEEK REPORT *****/
 		echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>This Week</h1></div>';
 
-		$focusSinceThisWeek = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE agent_name = '".$username."' AND YEARWEEK(`shift_date`, 1) = YEARWEEK(CURDATE(), 1)", ARRAY_N);
+		$focusSinceThisWeek = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$username."' AND YEARWEEK(`shift_date`, 1) = YEARWEEK(CURDATE(), 1)", ARRAY_N);
 
 		$totalHoursThisWeek = 0;
 		$ICHoursThisWeek = 0;
@@ -262,84 +264,84 @@ $shift_date = $date->format("Y-m-d");
 
 		 foreach( $focusSinceThisWeek as $focus ) {
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 					//echo $focus[$i]."<br />";
-					$totalHoursThisWeek++;
+					$totalHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'IB/')) {
 					//echo $focus[$i]."<br />";
-					$IBHoursThisWeek++;
+					$IBHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'IC/')) {
-					$ICHoursThisWeek++;
+					$ICHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'ZD/')) {
-					$ZDHoursThisWeek++;
+					$ZDHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'H/')) {
-					$HiringHoursThisWeek++;
+					$HiringHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] == 'ACT') {
-					$ACTHoursThisWeek++;
+					$ACTHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] == 'ACT/O') {
-					$ACTOHoursThisWeek++;
+					$ACTOHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'O')) {
-					$OpenHoursThisWeek++;
+					$OpenHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TR')) {
-					$TrainerHoursThisWeek++;
+					$TrainerHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TT')) {
-					$TraineeHoursThisWeek++;
+					$TraineeHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TC')) {
-					$TCHoursThisWeek++;
+					$TCHoursThisWeek += 0.5;
 				}
 			}
 
-      for ($i = 4; $i < 16; $i++) {
+      for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] == 'TM') {
-					$ACTOHoursThisWeek++;
+					$ACTOHoursThisWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
-					$OtherHoursThisWeek++;
+					$OtherHoursThisWeek += 0.5;
 					$otherItemsListThisWeek[] = $focus[$i];
 				}
 			}
@@ -425,7 +427,7 @@ $shift_date = $date->format("Y-m-d");
 		/**** YOUR LAST WEEK REPORT *****/
 		echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>Last Week</h1></div>';
 
-		$focusSinceWeek = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE agent_name = '".$username."' AND shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+		$focusSinceWeek = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$username."' AND shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
 AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
 		$totalHoursWeek = 0;
@@ -458,84 +460,84 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
 		 foreach( $focusSinceWeek as $focus ) {
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 					//echo $focus[$i]."<br />";
-					$totalHoursWeek++;
+					$totalHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'IB/')) {
 					//echo $focus[$i]."<br />";
-					$IBHoursWeek++;
+					$IBHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'IC/')) {
-					$ICHoursWeek++;
+					$ICHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'ZD/')) {
-					$ZDHoursWeek++;
+					$ZDHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'H/')) {
-					$HiringHoursWeek++;
+					$HiringHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] == 'ACT') {
-					$ACTHoursWeek++;
+					$ACTHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] == 'ACT/O') {
-					$ACTOHoursWeek++;
+					$ACTOHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'O')) {
-					$OpenHoursWeek++;
+					$OpenHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TR')) {
-					$TrainerHoursWeek++;
+					$TrainerHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TT')) {
-					$TraineeHoursWeek++;
+					$TraineeHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TC')) {
-					$TCHoursWeek++;
+					$TCHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TM')) {
-					$TMHoursWeek++;
+					$TMHoursWeek += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
-					$OtherHoursWeek++;
+					$OtherHoursWeek += 0.5;
 					$otherItemsListWeek[] = $focus[$i];
 				}
 			}
@@ -621,7 +623,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		/**** YOUR ALL TIME REPORT *****/
 		echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>All Time</h1></div>';
 
-		$focusSinceStart = $wpdb->get_results( "SELECT * FROM cs_focus WHERE agent_name = '".$username."' AND shift_date <= '". $shift_date ." 00:00:00'", ARRAY_N);
+		$focusSinceStart = $wpdb->get_results( "SELECT * FROM cs_focus_new WHERE agent_name = '".$username."' AND shift_date <= '". $shift_date ." 00:00:00'", ARRAY_N);
 
 		//print_r($focusSinceStart);
 
@@ -654,85 +656,85 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
 		foreach( $focusSinceStart as $focus ) {
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 					//echo $focus[$i]."<br />";
-					$totalHoursStart++;
+					$totalHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'IB/')) {
 					//echo $focus[$i]."<br />";
-					$IBHoursStart++;
+					$IBHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'IC/')) {
-					$ICHoursStart++;
+					$ICHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'ZD/')) {
-					$ZDHoursStart++;
+					$ZDHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'H/')) {
-					$HiringHoursStart++;
+					$HiringHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] == 'ACT') {
-					$ACTHoursStart++;
+					$ACTHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if ($focus[$i] == 'ACT/O') {
-					$ACTOHoursStart++;
+					$ACTOHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'O')) {
-					$OpenHoursStart++;
+					$OpenHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TR')) {
-					$TrainerHoursStart++;
+					$TrainerHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TT')) {
-					$TraineeHoursStart++;
+					$TraineeHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (startsWith($focus[$i], 'TC')) {
-					$TCHoursStart++;
+					$TCHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
         if ($focus[$i] == 'TM') {
-					$TMHoursStart++;
+					$TMHoursStart += 0.5;
 				}
 			}
 
-			for ($i = 4; $i < 16; $i++) {
+			for ($i = 4; $i < $dbCols; $i++) {
 				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
 					$otherItemsListStart[] = $focus[$i];
-					$OtherHoursStart++;
+					$OtherHoursStart += 0.5;
 				}
 			}
 		}
@@ -823,7 +825,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	/***** CS REPORT FOR TODAY ******/
 	echo '<div style="padding-left: 30px; margin-top: 0px; padding-top: 10px; padding-bottom: 10px; background-color: #fcf7fc;"><div style="background-color: black; color: white; padding-left: 10px;"><h1>Today</h1></div>';
 
-	$focusCSSinceToday = $wpdb->get_results( "SELECT * FROM cs_focus WHERE shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
+	$focusCSSinceToday = $wpdb->get_results( "SELECT * FROM cs_focus_new WHERE shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
 
 	$CS_totalHoursToday = 0;
 	$CS_ICHoursToday = 0;
@@ -854,84 +856,84 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 
 	 foreach( $focusCSSinceToday as $focus ) {
 
-        for ($i = 4; $i < 16; $i++) {
+        for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 				//echo $focus[$i]."<br />";
-				$CS_totalHoursToday++;
+				$CS_totalHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'IB/')) {
 				//echo $focus[$i]."<br />";
-				$CS_IBHoursToday++;
+				$CS_IBHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'IC/')) {
-				$CS_ICHoursToday++;
+				$CS_ICHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'ZD/')) {
-				$CS_ZDHoursToday++;
+				$CS_ZDHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'H/')) {
-				$CS_HiringHoursToday++;
+				$CS_HiringHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] == 'ACT') {
-				$CS_ACTHoursToday++;
+				$CS_ACTHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] == 'ACT/O') {
-				$CS_ACTOHoursToday++;
+				$CS_ACTOHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'O')) {
-				$CS_OpenHoursToday++;
+				$CS_OpenHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TR')) {
-				$CS_TrainerHoursToday++;
+				$CS_TrainerHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TT')) {
-				$CS_TraineeHoursToday++;
+				$CS_TraineeHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TC')) {
-				$CS_TCHoursToday++;
+				$CS_TCHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
       if ($focus[$i] == 'TM') {
-				$CS_TMHoursToday++;
+				$CS_TMHoursToday += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
-				$CS_OtherHoursToday++;
+				$CS_OtherHoursToday += 0.5;
 				$CS_otherItemsListToday[] = $focus[$i];
 			}
 		}
@@ -996,7 +998,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	/***** CS REPORT This Week ******/
 	echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>This Week</h1></div>';
 
-	$focusCSSinceThisWeek = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE YEARWEEK(`shift_date`, 1) = YEARWEEK(CURDATE(), 1)", ARRAY_N);
+	$focusCSSinceThisWeek = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE YEARWEEK(`shift_date`, 1) = YEARWEEK(CURDATE(), 1)", ARRAY_N);
 
 	$CS_totalHoursThisWeek = 0;
 	$CS_ICHoursThisWeek = 0;
@@ -1026,84 +1028,84 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 
 	 foreach( $focusCSSinceThisWeek as $focus ) {
 
-        for ($i = 4; $i < 16; $i++) {
+        for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 				//echo $focus[$i]."<br />";
-				$CS_totalHoursThisWeek++;
+				$CS_totalHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'IB/')) {
 				//echo $focus[$i]."<br />";
-				$CS_IBHoursThisWeek++;
+				$CS_IBHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'IC/')) {
-				$CS_ICHoursThisWeek++;
+				$CS_ICHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'ZD/')) {
-				$CS_ZDHoursThisWeek++;
+				$CS_ZDHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'H/')) {
-				$CS_HiringHoursThisWeek++;
+				$CS_HiringHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] == 'ACT') {
-				$CS_ACTHoursThisWeek++;
+				$CS_ACTHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] == 'ACT/O') {
-				$CS_ACTOHoursThisWeek++;
+				$CS_ACTOHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'O')) {
-				$CS_OpenHoursThisWeek++;
+				$CS_OpenHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TR')) {
-				$CS_TrainerHoursThisWeek++;
+				$CS_TrainerHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TT')) {
-				$CS_TraineeHoursThisWeek++;
+				$CS_TraineeHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TC')) {
-				$CS_TCHoursThisWeek++;
+				$CS_TCHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
       if ($focus[$i] == 'TM') {
-				$CS_TMHoursThisWeek++;
+				$CS_TMHoursThisWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
-				$CS_OtherHoursThisWeek++;
+				$CS_OtherHoursThisWeek += 0.5;
 				$CS_otherItemsListThisWeek[] = $focus[$i];
 			}
 		}
@@ -1169,7 +1171,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	/***** CS REPORT LAST WEEK ******/
 	echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>Last Week</h1></div>';
 
-	$focusCSSinceLastWeek = $wpdb->get_results( "SELECT * FROM `cs_focus` WHERE shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+	$focusCSSinceLastWeek = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
 AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
 	$CS_totalHoursLastWeek = 0;
@@ -1200,84 +1202,84 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
 	 foreach( $focusCSSinceLastWeek as $focus ) {
 
-        for ($i = 4; $i < 16; $i++) {
+        for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 				//echo $focus[$i]."<br />";
-				$CS_totalHoursLastWeek++;
+				$CS_totalHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'IB/')) {
 				//echo $focus[$i]."<br />";
-				$CS_IBHoursLastWeek++;
+				$CS_IBHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'IC/')) {
-				$CS_ICHoursLastWeek++;
+				$CS_ICHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'ZD/')) {
-				$CS_ZDHoursLastWeek++;
+				$CS_ZDHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'H/')) {
-				$CS_HiringHoursLastWeek++;
+				$CS_HiringHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] == 'ACT') {
-				$CS_ACTHoursLastWeek++;
+				$CS_ACTHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] == 'ACT/O') {
-				$CS_ACTOHoursLastWeek++;
+				$CS_ACTOHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'O')) {
-				$CS_OpenHoursLastWeek++;
+				$CS_OpenHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TR')) {
-				$CS_TrainerHoursLastWeek++;
+				$CS_TrainerHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TT')) {
-				$CS_TraineeHoursLastWeek++;
+				$CS_TraineeHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TC')) {
-				$CS_TCHoursLastWeek++;
+				$CS_TCHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
       if ($focus[$i] == 'TM') {
-				$CS_TMHoursLastWeek++;
+				$CS_TMHoursLastWeek += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
-				$CS_OtherHoursLastWeek++;
+				$CS_OtherHoursLastWeek += 0.5;
 				$CS_otherItemsListLastWeek[] = $focus[$i];
 			}
 		}
@@ -1343,7 +1345,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 	/***** CS REPORT SINCE START ******/
 	echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>All Time</h1></div>';
 
-	$focusCSSinceStart = $wpdb->get_results( "SELECT * FROM cs_focus WHERE shift_date <= '". $shift_date ." 00:00:00'", ARRAY_N);
+	$focusCSSinceStart = $wpdb->get_results( "SELECT * FROM cs_focus_new WHERE shift_date <= '". $shift_date ." 00:00:00'", ARRAY_N);
 
 	$CS_totalHoursStart = 0;
 	$CS_ICHoursStart = 0;
@@ -1375,84 +1377,84 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
 	 foreach( $focusCSSinceStart as $focus ) {
 
-        for ($i = 4; $i < 16; $i++) {
+        for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] != '' && $focus[$i] != 'LNCH') {
 				//echo $focus[$i]."<br />";
-				$CS_totalHoursStart++;
+				$CS_totalHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'IB/')) {
 				//echo $focus[$i]."<br />";
-				$CS_IBHoursStart++;
+				$CS_IBHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'IC/')) {
-				$CS_ICHoursStart++;
+				$CS_ICHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'ZD/')) {
-				$CS_ZDHoursStart++;
+				$CS_ZDHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'H/')) {
-				$CS_HiringHoursStart++;
+				$CS_HiringHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] == 'ACT') {
-				$CS_ACTHoursStart++;
+				$CS_ACTHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focus[$i] == 'ACT/O') {
-				$CS_ACTOHoursStart++;
+				$CS_ACTOHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'O')) {
-				$CS_OpenHoursStart++;
+				$CS_OpenHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TR')) {
-				$CS_TrainerHoursStart++;
+				$CS_TrainerHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TT')) {
-				$CS_TraineeHoursStart++;
+				$CS_TraineeHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (startsWith($focus[$i], 'TC')) {
-				$CS_TCHoursStart++;
+				$CS_TCHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
       if ($focus[$i] == 'TM') {
-				$CS_TMHoursStart++;
+				$CS_TMHoursStart += 0.5;
 			}
 		}
 
-		for ($i = 4; $i < 16; $i++) {
+		for ($i = 4; $i < $dbCols; $i++) {
 			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
-				$CS_OtherHoursStart++;
+				$CS_OtherHoursStart += 0.5;
 				$CS_otherItemsListStart[] = $focus[$i];
 			}
 		}

@@ -309,7 +309,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
   //print_r($focusCSSinceThisWeek[0][1]);
   //$totalCSTaskHours = 0;
 
-  echo '<form method="post" action="/focus-manager-reports-update">
+  echo '<form method="post" action="/manager-reports">
     <select name="agentName">';
 
     sort($agentNamesArray);
@@ -358,7 +358,7 @@ for ($i = 0; $i < count($agentNamesArray); $i++) {
          }
          else if ($_POST['type'] == 'Last Week') {
 
-           $focus = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$_POST['agentName']."' AND shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
+           $focus = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$_POST['agentName']."' AND shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+5 DAY AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
            //print_r($focus);
            $key = array_search($_POST['agentName'], array_column($agentInfoLastWeek, 'agent'));

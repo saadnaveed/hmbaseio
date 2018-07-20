@@ -20,14 +20,12 @@ $date = new DateTime(null, new DateTimeZone(date_default_timezone_get()));
 $date->setTimeZone(new DateTimeZone('America/Chicago'));
 $lastUpdated = $date->format('g:i a');
 $shift_date = $date->format("Y-m-d");
+$dbCols = 28;
 
 //if ($userID != 0) {
-
-	if (strtolower($username) != 'jc' && strtolower($username) != 'rebecca' && strtolower($username) != 'alex' && strtolower($username) != 'greg' && strtolower($username) != 'amy' && strtolower($username) != 'rushi') {
 		echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><strong>Your Focus Report</strong></div>';
 
 		echo '<div style="padding-left: 20px; padding-top: 10px; margin-top: 0px; margin-bottom: 10px; background-color: #fcf7fc"><h3>Hi, ' .$username. '! Welcome back :) </h3><br />';
-	}
 
 	//print("<pre>".print_r($table['data'][$userID],true)."</pre>");
 	//print_r(array_count_values($table['data'][$userID]));
@@ -36,7 +34,6 @@ $shift_date = $date->format("Y-m-d");
 	//echo "Today you're working from: ";
 	//echo $table['data'][$userID][1] .'pm <br />';
 
-	if (strtolower($username) != 'jc' && strtolower($username) != 'rebecca' && strtolower($username) != 'alex' && strtolower($username) != 'greg' && strtolower($username) != 'amy') {
 		echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>Today</h1></div>';
 
 		$focusToday = $wpdb->get_row( "SELECT * FROM cs_focus_new WHERE agent_name = '".$username."' AND shift_date = '". $shift_date ." 00:00:00'", ARRAY_N);
@@ -69,8 +66,6 @@ $shift_date = $date->format("Y-m-d");
 
 		$otherItemsListToday = array();
 
-    $dbCols = 28;
-
 		for ($i = 4; $i < $dbCols; $i++) {
 			if ($focusToday[$i] != '' && $focusToday[$i] != 'LNCH') {
 				//echo $focusToday[$i]."<br />";
@@ -98,7 +93,7 @@ $shift_date = $date->format("Y-m-d");
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (startsWith($focusToday[$i], 'H/')) {
+			if (startsWith($focusToday[$i], 'H')) {
 				$HiringHoursToday += 0.5;
 			}
 		}
@@ -146,7 +141,7 @@ $shift_date = $date->format("Y-m-d");
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (!startsWith($focusToday[$i], 'IC/') && !startsWith($focusToday[$i], 'IB/') && !startsWith($focusToday[$i], 'ZD/') && $focusToday[$i] != '' && $focusToday[$i] != 'TM' && $focusToday[$i] != 'LNCH' && !startsWith($focusToday[$i], 'H/') && !startsWith($focusToday[$i], 'ACT/O') && !startsWith($focusToday[$i], 'TT') && !startsWith($focusToday[$i], 'TR') && $focusToday[$i] != 'ACT' && $focusToday[$i] != 'O' && $focusToday[$i] != 'TC') {
+			if (!startsWith($focusToday[$i], 'IC/') && !startsWith($focusToday[$i], 'IB/') && !startsWith($focusToday[$i], 'ZD/') && $focusToday[$i] != '' && $focusToday[$i] != 'TM' && $focusToday[$i] != 'LNCH' && !startsWith($focusToday[$i], 'H') && !startsWith($focusToday[$i], 'ACT/O') && !startsWith($focusToday[$i], 'TT') && !startsWith($focusToday[$i], 'TR') && $focusToday[$i] != 'ACT' && $focusToday[$i] != 'O' && $focusToday[$i] != 'TC') {
 				//echo $focusToday[$i]."<br />";
 				$OtherHoursToday += 0.5;
 				$otherItemsListToday[] = $focusToday[$i];
@@ -291,7 +286,7 @@ $shift_date = $date->format("Y-m-d");
 			}
 
 			for ($i = 4; $i < $dbCols; $i++) {
-				if (startsWith($focus[$i], 'H/')) {
+				if (startsWith($focus[$i], 'H')) {
 					$HiringHoursThisWeek += 0.5;
 				}
 			}
@@ -339,7 +334,7 @@ $shift_date = $date->format("Y-m-d");
 			}
 
 			for ($i = 4; $i < $dbCols; $i++) {
-				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
 					$OtherHoursThisWeek += 0.5;
 					$otherItemsListThisWeek[] = $focus[$i];
@@ -427,7 +422,7 @@ $shift_date = $date->format("Y-m-d");
 		/**** YOUR LAST WEEK REPORT *****/
 		echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>Last Week</h1></div>';
 
-		$focusSinceWeek = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$username."' AND shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+		$focusSinceWeek = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$username."' AND shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+5 DAY
 AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
 		$totalHoursWeek = 0;
@@ -487,7 +482,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 			}
 
 			for ($i = 4; $i < $dbCols; $i++) {
-				if (startsWith($focus[$i], 'H/')) {
+				if (startsWith($focus[$i], 'H')) {
 					$HiringHoursWeek += 0.5;
 				}
 			}
@@ -535,7 +530,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 			}
 
 			for ($i = 4; $i < $dbCols; $i++) {
-				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
 					$OtherHoursWeek += 0.5;
 					$otherItemsListWeek[] = $focus[$i];
@@ -683,7 +678,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 			}
 
 			for ($i = 4; $i < $dbCols; $i++) {
-				if (startsWith($focus[$i], 'H/')) {
+				if (startsWith($focus[$i], 'H')) {
 					$HiringHoursStart += 0.5;
 				}
 			}
@@ -731,7 +726,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 			}
 
 			for ($i = 4; $i < $dbCols; $i++) {
-				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
 					$otherItemsListStart[] = $focus[$i];
 					$OtherHoursStart += 0.5;
@@ -818,7 +813,6 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		echo '<br /><center><p><i><span style="color: black; font-size: 11px;">Page Last Updated: '. $lastUpdated .'</span></i></p></center><br />';
 
 		echo '</div>';
-	}
 
 echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><strong>'.do_shortcode('[icon name="fa-search-plus"]').' CS Focus Report</strong></div>';
 
@@ -883,7 +877,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (startsWith($focus[$i], 'H/')) {
+			if (startsWith($focus[$i], 'H')) {
 				$CS_HiringHoursToday += 0.5;
 			}
 		}
@@ -931,7 +925,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursToday += 0.5;
 				$CS_otherItemsListToday[] = $focus[$i];
@@ -1055,7 +1049,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (startsWith($focus[$i], 'H/')) {
+			if (startsWith($focus[$i], 'H')) {
 				$CS_HiringHoursThisWeek += 0.5;
 			}
 		}
@@ -1103,7 +1097,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursThisWeek += 0.5;
 				$CS_otherItemsListThisWeek[] = $focus[$i];
@@ -1171,7 +1165,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	/***** CS REPORT LAST WEEK ******/
 	echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>Last Week</h1></div>';
 
-	$focusCSSinceLastWeek = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+	$focusCSSinceLastWeek = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE shift_date >= curdate() - INTERVAL DAYOFWEEK(curdate())+5 DAY
 AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 
 	$CS_totalHoursLastWeek = 0;
@@ -1229,7 +1223,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (startsWith($focus[$i], 'H/')) {
+			if (startsWith($focus[$i], 'H')) {
 				$CS_HiringHoursLastWeek += 0.5;
 			}
 		}
@@ -1277,7 +1271,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursLastWeek += 0.5;
 				$CS_otherItemsListLastWeek[] = $focus[$i];
@@ -1404,7 +1398,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (startsWith($focus[$i], 'H/')) {
+			if (startsWith($focus[$i], 'H')) {
 				$CS_HiringHoursStart += 0.5;
 			}
 		}
@@ -1452,7 +1446,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H/') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursStart += 0.5;
 				$CS_otherItemsListStart[] = $focus[$i];

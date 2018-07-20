@@ -14,7 +14,7 @@ function checkFocusTimes($currentTime, $focusTime, $nextFocusTime) {
 $current_user = wp_get_current_user();
 $username = $current_user->user_login;
 $userID = 0;
-$special = '<center><div style="color: white; width: 300px; background-color: rgba(255, 0, 0, 0.6); padding: 5px; font-size: 11px;">'.do_shortcode('[icon name="fa-exclamation-triangle"]').'<i> We have a new question of the Month: <b>IF you could add a new feature to homebase, what would it be?</b> (<a href="https://docs.google.com/forms/d/e/1FAIpQLSeOuugdw7fVeu9FGwJoylsbAKiIO33OEkRb0NV32T9qkA5mQA/viewform" target="_blank">Submit Form</a>)</i></div></center>';
+$special = '<center><div style="color: white; width: 300px; background-color: rgba(255, 0, 0, 0.6); padding: 5px; font-size: 11px;">'.do_shortcode('[icon name="fa-exclamation-triangle"]').'<i> We have a new question of the Month: <b>How much time are we saving you per week?</b> (<a href="https://goo.gl/forms/6VK8xksAdCnoLTpb2" target="_blank">Submit Form</a>)</i></div></center>';
 
 $table = TablePress::$model_table->load( 12, true, false );
 
@@ -60,6 +60,10 @@ $agentExt = array (
 							'rachel' => '1001',
 							'joe' => '1044',
 							'ashlee' => '1043',
+              'estefany' => '1047',
+              'maalie' => '1051',
+              'briana' => '0000',
+              'may' => '0000',
 );
 
 $current_date = $date->format("Y-m-d H:i:s");
@@ -202,7 +206,7 @@ if ($userID != 0) {
 		echo 'Get ready! You\'re about to have an awesome team meeting!<br />';
 	}
 	else if ($currentFocus != '' && $upcomingFocus == '') {
-		echo ''.do_shortcode('[icon name="fa-check"]').' Great job! You\'re almost done for the day! Don\'t forget to fill out your <a href="https://docs.google.com/spreadsheets/u/2/d/1Spu8BRAPDjOr1F3iQ_pMqWnxIJB4_kZIB5eIcGDPeGg/edit#gid=317380563" target="_blank">task hours</a>!<br />';
+		echo ''.do_shortcode('[icon name="fa-check"]').' Great job! You\'re almost done for the day! Hope your day was fantastic! :)<br />';
 	}
 
 	echo '<br />';

@@ -148,14 +148,14 @@ $metricsJulyWeek1MostGoodRatings = array();
 // $mostGoodRatingsCell = 'C136';
 
 // Week 2 July
-$ticketPerHourCell = 'D127';
-$totalTicketsCell = 'D123';
-$mostGoodRatingsCell = 'D136';
+// $ticketPerHourCell = 'D127';
+// $totalTicketsCell = 'D123';
+// $mostGoodRatingsCell = 'D136';
 //
 // // Week 3 July
-// $ticketPerHourCell = 'E127';
-// $totalTicketsCell = 'E123';
-// $mostGoodRatingsCell = 'E136';
+$ticketPerHourCell = 'E127';
+$totalTicketsCell = 'E123';
+$mostGoodRatingsCell = 'E136';
 //
 // // Week 4 July
 // $ticketPerHourCell = 'F127';

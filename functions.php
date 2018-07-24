@@ -853,6 +853,42 @@ add_filter( 'auth_cookie_expiration', 'wploop_never_log_out' );
     }
     return $items;
 }
+
+
+add_filter( 'gform_field_value_category', 'populate_category' );
+function populate_category( $value, $field, $name ) {
+	$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	$parts = parse_url($actual_link);
+	parse_str($parts['query'], $query);
+	global $category;
+	$category = $query['category'];
+	return $query['category'];
+}
+
+add_filter( 'gform_field_value_subcategory', 'populate_subcategory' );
+function populate_subcategory( $value, $field, $name ) {
+	$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	$parts = parse_url($actual_link);
+	parse_str($parts['query'], $query);
+	global $category;
+	$category = $query['subcategory'];
+	return $query['subcategory'];
+}
+
+function returnCategory() {
+	$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	$parts = parse_url($actual_link);
+	parse_str($parts['query'], $query);
+	return $query['category'];
+}
+
+function returnSubCategory() {
+	$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	$parts = parse_url($actual_link);
+	parse_str($parts['query'], $query);
+	return $query['subcategory'];
+}
+
 add_filter( 'wp_nav_menu_objects', 'wpa_filter_nav_menu_objects' );
 
 add_filter('gform_pre_render', 'populate_movies');
@@ -868,7 +904,7 @@ add_filter( 'gform_pre_submission_filter', 'populate_movies' );
 
 function populate_movies( $form ) {
 
-    if ( $form['title'] != "Timesheets[Tips]" && $form['title'] != "Timesheets[Breaks]") return $form;
+    if ( $form['title'] == "Discounts" && $form['title'] == "Billing Requests") return $form;
 
 //print_r($form['fields']);
 
@@ -887,14 +923,12 @@ function populate_movies( $form ) {
         // update 'Not listed Here' to whatever you'd like the instructive option to be
 				global $wpdb;
 
-				if ($form['title'] == "Timesheets[Tips]") {
-					$features = $wpdb->get_results( "select id, name from cs_feature_requests where category = 'Timesheets' AND subcategory = 'Tips';", ARRAY_N);
-				}
-				else if ($form['title'] == "Timesheets[Breaks]") {
-					$features = $wpdb->get_results( "select id, name from cs_feature_requests where category = 'Timesheets' AND subcategory = 'Breaks';", ARRAY_N);
-				}
+				$feature_category = returnCategory();
+				$feature_subcategory = returnSubCategory();
 
-        $choices = array(array('text' => 'Not listed Here', 'value' => 0 ));
+				$features = $wpdb->get_results( "select id, feature_name from cs_feature_requests where category = '".$feature_category."' AND subcategory = '".$feature_subcategory."' order by feature_name;", ARRAY_N);
+
+        $choices = array(array('text' => 'Not listed Here', 'value' => 'Not listed Here' ));
 
         for ($i = 0; $i < count($features); $i++) {
             $choices[] = array( 'text' => $features[$i][1], 'value' => $features[$i][1], 'isSelected' => false );
@@ -906,7 +940,7 @@ function populate_movies( $form ) {
 }
 
 /* Timesheets: Tips */
-add_action( 'gform_after_submission_5', 'access_entry_via_field', 10, 2 );
+add_action( 'gform_after_submission', 'access_entry_via_field', 10, 2 );
 function access_entry_via_field( $entry, $form ) {
     foreach ( $form['fields'] as $field ) {
         $inputs = $field->get_entry_inputs();
@@ -924,86 +958,55 @@ function access_entry_via_field( $entry, $form ) {
         }
     }
 
-	print_r($entry);
-
 	$tierForUpgrade = $entry['5'];
 	$currentPlan = $entry['3'];
+	$cs_requested = $entry['17.1'];
+	$cs_agent_name = $entry['16'];
+	$category = $entry['13'];
+	$subcategory = $entry['14'];
 	$adminLink = $entry['2'];
-	$feature = $entry['9'];
-	$newFeatureName = $entry['12'];
-	$description = $entry['11'];
+	$existing_feature_name = $entry['9'];
+	$new_feature_name = $entry['12'];
+	$new_feature_description = $entry['18'];
+	$merchant_reason = $entry['11'];
+	$additional_notes = $entry['15'];
+
+	if ($cs_requested != 'Yes') {
+		$cs_requested = 'No';
+	}
+
 	global $wpdb;
 
 	// If it's a feature that currently does NOT exist
-	if ($feature == 'Not listed Here') {
+	if ($existing_feature_name == 'Not listed Here') {
 		$wpdb->insert('cs_feature_requests', array(
+			'agent_name' => $cs_agent_name,
+			'cs_requested' => $cs_requested,
 			'tierForUpgrade' => $tierForUpgrade,
 			'currentplan' => $currentPlan,
 			'adminlinks' => $adminLink,
-			'category' => 'Timesheets',
-			'subcategory' => 'Tips',
-			'name' => $newFeatureName,
-			'description' => $description,
+			'category' => $category,
+			'subcategory' => $subcategory,
+			'feature_name' => $new_feature_name,
+			'feature_description' => $new_feature_description,
+			'merchant_reason' => $merchant_reason,
+			'additional_notes' => $additional_notes,
 			'requests' => 1,
 		));
 	}
 	else {
-		print_r($adminLink);
 		$wpdb->query("UPDATE cs_feature_requests SET
 			requests = (`requests` + 1),
 			adminlinks = concat(adminlinks, '<br>".$adminLink."')
-			WHERE name = '".$feature."'");
-	}
-}
+			WHERE feature_name = '".$existing_feature_name."'");
 
-/* Timesheets: Breaks */
-add_action( 'gform_after_submission_6', 'access_entry_via_field_6', 10, 2 );
-function access_entry_via_field_6( $entry, $form ) {
-    foreach ( $form['fields'] as $field ) {
-        $inputs = $field->get_entry_inputs();
-        if ( is_array( $inputs ) ) {
-
-            foreach ( $inputs as $input ) {
-                $value = rgar( $entry, (string) $input['id'] );
-                //echo $value;
-								//var_dump($inputs);
-
-
-            }
-        } else {
-            $value = rgar( $entry, (string) $field->id );
-        }
-    }
-
-	print_r($entry);
-
-	$tierForUpgrade = $entry['5'];
-	$currentPlan = $entry['3'];
-	$adminLink = $entry['2'];
-	$feature = $entry['9'];
-	$newFeatureName = $entry['12'];
-	$description = $entry['11'];
-	global $wpdb;
-
-	// If it's a feature that currently does NOT exist
-	if ($feature == 'Not listed Here') {
-		$wpdb->insert('cs_feature_requests', array(
-			'tierForUpgrade' => $tierForUpgrade,
-			'currentplan' => $currentPlan,
-			'adminlinks' => $adminLink,
-			'category' => 'Timesheets',
-			'subcategory' => 'Breaks',
-			'name' => $newFeatureName,
-			'description' => $description,
-			'requests' => 1,
-		));
-	}
-	else {
-		print_r($adminLink);
-		$wpdb->query("UPDATE cs_feature_requests SET
-			requests = (`requests` + 1),
-			adminlinks = concat(adminlinks, '<br>".$adminLink."')
-			WHERE name = '".$feature."'");
+			$wpdb->insert('cs_feature_requests_comments', array(
+				'agent_name' => $cs_agent_name,
+				'feature_name' => $existing_feature_name,
+				'feature_description' => $new_feature_description,
+				'merchant_reason' => $merchant_reason,
+				'additional_notes' => $additional_notes,
+			));
 	}
 }
 

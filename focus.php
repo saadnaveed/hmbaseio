@@ -71,76 +71,79 @@ $shift_date = $date->format("Y-m-d");
 
 /* Store Updated Focus Data into database */
 /* TODO: make it not execute on every request lol */
-for ($i = 3; $i < $totalAgents; $i++) {
+if (strtotime($currentHour) <= strtotime('7:00 PM') && strtotime($currentHour) >= strtotime('8:00AM')) {
+  for ($i = 3; $i < $totalAgents; $i++) {
 
-  // First check to see if there is already an entry for the day
-  $focus = $wpdb->get_row( "SELECT * FROM cs_focus_new WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
 
-  // Insert into DB if brand new day
-  if ($table['data'][$i][0] != '' && $table['data'][$i][1] != '' && !$focus) {
-    $wpdb->insert('cs_focus_new', array(
-      'agent_name' => strtolower($table['data'][$i][0]),
-      'shift_date' => $shift_date,
-      'shift_time' => $table['data'][$i][1],
-      'focus_8am' => $table['data'][$i][3],
-      'focus_830am' => $table['data'][$i][4],
-      'focus_9am' => $table['data'][$i][5],
-      'focus_930am' => $table['data'][$i][6],
-      'focus_10am' => $table['data'][$i][7],
-      'focus_1030am' => $table['data'][$i][8],
-      'focus_11am' => $table['data'][$i][9],
-      'focus_1130am' => $table['data'][$i][10],
-      'focus_12pm' => $table['data'][$i][11],
-      'focus_1230pm' => $table['data'][$i][12],
-      'focus_1pm' => $table['data'][$i][13],
-      'focus_130pm' => $table['data'][$i][14],
-      'focus_2pm' => $table['data'][$i][15],
-      'focus_230pm' => $table['data'][$i][16],
-      'focus_3pm' => $table['data'][$i][17],
-      'focus_330pm' => $table['data'][$i][18],
-      'focus_4pm' => $table['data'][$i][19],
-      'focus_430pm' => $table['data'][$i][20],
-      'focus_5pm' => $table['data'][$i][21],
-      'focus_530pm' => $table['data'][$i][22],
-      'focus_6pm' => $table['data'][$i][23],
-      'focus_630pm' => $table['data'][$i][24],
-      'focus_7pm' => $table['data'][$i][25],
-      'focus_730pm' => $table['data'][$i][26],
-      'date_created' => $current_date,
-      'updated' => 0,
-    ));
+    // First check to see if there is already an entry for the day
+    $focus = $wpdb->get_row( "SELECT * FROM cs_focus_new WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
+
+    // Insert into DB if brand new day
+    if ($table['data'][$i][0] != '' && $table['data'][$i][1] != '' && !$focus) {
+      $wpdb->insert('cs_focus_new', array(
+        'agent_name' => strtolower($table['data'][$i][0]),
+        'shift_date' => $shift_date,
+        'shift_time' => $table['data'][$i][1],
+        'focus_8am' => $table['data'][$i][3],
+        'focus_830am' => $table['data'][$i][4],
+        'focus_9am' => $table['data'][$i][5],
+        'focus_930am' => $table['data'][$i][6],
+        'focus_10am' => $table['data'][$i][7],
+        'focus_1030am' => $table['data'][$i][8],
+        'focus_11am' => $table['data'][$i][9],
+        'focus_1130am' => $table['data'][$i][10],
+        'focus_12pm' => $table['data'][$i][11],
+        'focus_1230pm' => $table['data'][$i][12],
+        'focus_1pm' => $table['data'][$i][13],
+        'focus_130pm' => $table['data'][$i][14],
+        'focus_2pm' => $table['data'][$i][15],
+        'focus_230pm' => $table['data'][$i][16],
+        'focus_3pm' => $table['data'][$i][17],
+        'focus_330pm' => $table['data'][$i][18],
+        'focus_4pm' => $table['data'][$i][19],
+        'focus_430pm' => $table['data'][$i][20],
+        'focus_5pm' => $table['data'][$i][21],
+        'focus_530pm' => $table['data'][$i][22],
+        'focus_6pm' => $table['data'][$i][23],
+        'focus_630pm' => $table['data'][$i][24],
+        'focus_7pm' => $table['data'][$i][25],
+        'focus_730pm' => $table['data'][$i][26],
+        'date_created' => $current_date,
+        'updated' => 0,
+      ));
+    }
+    //TODO: only update every x minutes
+    else if ($focus && $focus->agent_name == strtolower($table['data'][$i][0])) {
+      $wpdb->query("UPDATE cs_focus_new SET
+      focus_8am = '".$table['data'][$i][3]."',
+      focus_830am = '".$table['data'][$i][4]."',
+      focus_9am = '".$table['data'][$i][5]."',
+      focus_930am = '".$table['data'][$i][6]."',
+      focus_10am = '".$table['data'][$i][7]."',
+      focus_1030am = '".$table['data'][$i][8]."',
+      focus_11am = '".$table['data'][$i][9]."',
+      focus_1130am = '".$table['data'][$i][10]."',
+      focus_12pm = '".$table['data'][$i][11]."',
+      focus_1230pm = '".$table['data'][$i][12]."',
+      focus_1pm = '".$table['data'][$i][13]."',
+      focus_130pm = '".$table['data'][$i][14]."',
+      focus_2pm = '".$table['data'][$i][15]."',
+      focus_230pm = '".$table['data'][$i][16]."',
+      focus_3pm = '".$table['data'][$i][17]."',
+      focus_330pm = '".$table['data'][$i][18]."',
+      focus_4pm = '".$table['data'][$i][19]."',
+      focus_430pm = '".$table['data'][$i][20]."',
+      focus_5pm = '".$table['data'][$i][21]."',
+      focus_530pm = '".$table['data'][$i][22]."',
+      focus_6pm = '".$table['data'][$i][23]."',
+      focus_630pm = '".$table['data'][$i][24]."',
+      focus_7pm = '".$table['data'][$i][25]."',
+      focus_730pm = '".$table['data'][$i][26]."',
+      updated = '1'
+      WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
+    }
+
   }
-  //TODO: only update every x minutes
-  else if ($focus && $focus->agent_name == strtolower($table['data'][$i][0])) {
-    $wpdb->query("UPDATE cs_focus_new SET
-    focus_8am = '".$table['data'][$i][3]."',
-    focus_830am = '".$table['data'][$i][4]."',
-    focus_9am = '".$table['data'][$i][5]."',
-    focus_930am = '".$table['data'][$i][6]."',
-    focus_10am = '".$table['data'][$i][7]."',
-    focus_1030am = '".$table['data'][$i][8]."',
-    focus_11am = '".$table['data'][$i][9]."',
-    focus_1130am = '".$table['data'][$i][10]."',
-    focus_12pm = '".$table['data'][$i][11]."',
-    focus_1230pm = '".$table['data'][$i][12]."',
-    focus_1pm = '".$table['data'][$i][13]."',
-    focus_130pm = '".$table['data'][$i][14]."',
-    focus_2pm = '".$table['data'][$i][15]."',
-    focus_230pm = '".$table['data'][$i][16]."',
-    focus_3pm = '".$table['data'][$i][17]."',
-    focus_330pm = '".$table['data'][$i][18]."',
-    focus_4pm = '".$table['data'][$i][19]."',
-    focus_430pm = '".$table['data'][$i][20]."',
-    focus_5pm = '".$table['data'][$i][21]."',
-    focus_530pm = '".$table['data'][$i][22]."',
-    focus_6pm = '".$table['data'][$i][23]."',
-    focus_630pm = '".$table['data'][$i][24]."',
-    focus_7pm = '".$table['data'][$i][25]."',
-    focus_730pm = '".$table['data'][$i][26]."',
-    updated = '1'
-    WHERE agent_name = '". $table['data'][$i][0]."' AND shift_date = '". $shift_date ." 00:00:00'");
-  }
-
 }
 
 if ($userID != 0) {

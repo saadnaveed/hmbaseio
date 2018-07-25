@@ -20,11 +20,22 @@ $shift_date = $date->format("Y-m-d");
 
 $categories = [
   array(
+    "name" => "Dashboard",
+    "subcategories" => array (
+      "Format" => "http://hmbase.io/time-clockformat/",
+      "How Something Currently Works" => "http://hmbase.io/time-clockHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/time-clocknew-functionality/",
+      "Permissions" => "http://hmbase.io/time-clockpermissions/",
+      "Other" => "http://hmbase.io/time-clockother/",
+      "Export" => "http://hmbase.io/time-clockexports/",
+    )
+  ),
+  array(
     "name" => "Timesheets",
     "subcategories" => array (
       "Format" => "http://hmbase.io/timesheetsformat/",
-      "Change" => "http://hmbase.io/timesheets-change/",
-      "New Functionality" => "http://hmbase.io/timesheetsnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/timesheets-How Something Currently Works/",
+      "New Feature" => "http://hmbase.io/timesheetsnew-functionality/",
       "Permissions" => "http://hmbase.io/timesheetspermissions/",
       "Other" => "http://hmbase.io/timesheetsother/",
       "Export" => "http://hmbase.io/timesheetsexports/",
@@ -34,8 +45,8 @@ $categories = [
     "name" => "Schedule",
     "subcategories" => array (
       "Format" => "http://hmbase.io/scheduleformat/",
-      "Change" => "http://hmbase.io/schedulechange/",
-      "New Functionality" => "http://hmbase.io/schedulenew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/scheduleHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/schedulenew-functionality/",
       "Permissions" => "http://hmbase.io/schedulepermissions/",
       "Other" => "http://hmbase.io/scheduleother/",
       "Export" => "http://hmbase.io/scheduleexports/",
@@ -45,8 +56,8 @@ $categories = [
     "name" => "Auto-Schedule",
     "subcategories" => array (
       "Format" => "http://hmbase.io/auto-scheduleformat/",
-      "Change" => "http://hmbase.io/auto-schedulechange/",
-      "New Functionality" => "http://hmbase.io/auto-schedulenew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/auto-scheduleHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/auto-schedulenew-functionality/",
       "Permissions" => "http://hmbase.io/auto-schedulepermissions/",
       "Other" => "http://hmbase.io/auto-scheduleother/",
       "Export" => "http://hmbase.io/auto-scheduleexports/",
@@ -56,8 +67,8 @@ $categories = [
     "name" => "Clover-Specific",
     "subcategories" => array (
       "Format" => "http://hmbase.io/clover-specificformat/",
-      "Change" => "http://hmbase.io/clover-specificchange/",
-      "New Functionality" => "http://hmbase.io/clover-specificnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/clover-specificHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/clover-specificnew-functionality/",
       "Permissions" => "http://hmbase.io/clover-specificpermissions/",
       "Other" => "http://hmbase.io/clover-specificother/",
       "Export" => "http://hmbase.io/clover-specificexports/",
@@ -67,8 +78,8 @@ $categories = [
     "name" => "Hiring",
     "subcategories" => array (
       "Format" => "http://hmbase.io/hiringformat/",
-      "Change" => "http://hmbase.io/hiringchange/",
-      "New Functionality" => "http://hmbase.io/hiringnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/hiringHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/hiringnew-functionality/",
       "Permissions" => "http://hmbase.io/hiringpermissions/",
       "Other" => "http://hmbase.io/hiringother/",
       "Export" => "http://hmbase.io/hiringexports/",
@@ -78,8 +89,8 @@ $categories = [
     "name" => "Integrations",
     "subcategories" => array (
       "Format" => "http://hmbase.io/integrationsformat/",
-      "Change" => "http://hmbase.io/integrationschange/",
-      "New Functionality" => "http://hmbase.io/integrationsnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/integrationsHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/integrationsnew-functionality/",
       "Permissions" => "http://hmbase.io/integrationspermissions/",
       "Other" => "http://hmbase.io/integrationsother/",
       "Export" => "http://hmbase.io/integrationsexports/",
@@ -89,8 +100,8 @@ $categories = [
     "name" => "Messaging",
     "subcategories" => array (
       "Format" => "http://hmbase.io/messagingformat/",
-      "Change" => "http://hmbase.io/messagingchange/",
-      "New Functionality" => "http://hmbase.io/messagingnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/messagingHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/messagingnew-functionality/",
       "Permissions" => "http://hmbase.io/messagingpermissions/",
       "Other" => "http://hmbase.io/messagingother/",
       "Export" => "http://hmbase.io/messagingexports/",
@@ -100,8 +111,8 @@ $categories = [
     "name" => "Mobile",
     "subcategories" => array (
       "Format" => "http://hmbase.io/mobileformat/",
-      "Change" => "http://hmbase.io/mobilechange/",
-      "New Functionality" => "http://hmbase.io/mobilenew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/mobileHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/mobilenew-functionality/",
       "Permissions" => "http://hmbase.io/mobilepermissions/",
       "Other" => "http://hmbase.io/mobileother/",
       "Export" => "http://hmbase.io/mobileexports/",
@@ -111,8 +122,8 @@ $categories = [
     "name" => "Notifications",
     "subcategories" => array (
       "Format" => "http://hmbase.io/notificationsformat/",
-      "Change" => "http://hmbase.io/notificationschange/",
-      "New Functionality" => "http://hmbase.io/notificationsnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/notificationsHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/notificationsnew-functionality/",
       "Permissions" => "http://hmbase.io/notificationspermissions/",
       "Other" => "http://hmbase.io/notificationsother/",
       "Export" => "http://hmbase.io/notificationsexports/",
@@ -122,8 +133,8 @@ $categories = [
     "name" => "Other",
     "subcategories" => array (
       "Format" => "http://hmbase.io/otherformat/",
-      "Change" => "http://hmbase.io/otherchange/",
-      "New Functionality" => "http://hmbase.io/othernew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/otherHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/othernew-functionality/",
       "Permissions" => "http://hmbase.io/otherpermissions/",
       "Other" => "http://hmbase.io/otherother/",
       "Export" => "http://hmbase.io/otherexports/",
@@ -133,8 +144,8 @@ $categories = [
     "name" => "Permissions",
     "subcategories" => array (
       "Format" => "http://hmbase.io/permissionsformat/",
-      "Change" => "http://hmbase.io/permissionschange/",
-      "New Functionality" => "http://hmbase.io/permissionsnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/permissionsHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/permissionsnew-functionality/",
       "Permissions" => "http://hmbase.io/permissionspermissions/",
       "Other" => "http://hmbase.io/permissionsother/",
       "Export" => "http://hmbase.io/permissionsexports/",
@@ -144,8 +155,8 @@ $categories = [
     "name" => "PTO",
     "subcategories" => array (
       "Format" => "http://hmbase.io/ptoformat/",
-      "Change" => "http://hmbase.io/ptochange/",
-      "New Functionality" => "http://hmbase.io/ptonew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/ptoHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/ptonew-functionality/",
       "Permissions" => "http://hmbase.io/ptopermissions/",
       "Other" => "http://hmbase.io/ptoother/",
       "Export" => "http://hmbase.io/ptoexports/",
@@ -155,8 +166,8 @@ $categories = [
     "name" => "Reports",
     "subcategories" => array (
       "Format" => "http://hmbase.io/reportsformat/",
-      "Change" => "http://hmbase.io/reportschange/",
-      "New Functionality" => "http://hmbase.io/reportsnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/reportsHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/reportsnew-functionality/",
       "Permissions" => "http://hmbase.io/reportspermissions/",
       "Other" => "http://hmbase.io/reportsother/",
       "Export" => "http://hmbase.io/reportsexports/",
@@ -166,8 +177,8 @@ $categories = [
     "name" => "Square-Specific",
     "subcategories" => array (
       "Format" => "http://hmbase.io/square-specificformat/",
-      "Change" => "http://hmbase.io/square-specificchange/",
-      "New Functionality" => "http://hmbase.io/square-specificnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/square-specificHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/square-specificnew-functionality/",
       "Permissions" => "http://hmbase.io/square-specificpermissions/",
       "Other" => "http://hmbase.io/square-specificother/",
       "Export" => "http://hmbase.io/square-specificexports/",
@@ -177,8 +188,8 @@ $categories = [
     "name" => "Team",
     "subcategories" => array (
       "Format" => "http://hmbase.io/teamformat/",
-      "Change" => "http://hmbase.io/teamchange/",
-      "New Functionality" => "http://hmbase.io/teamnew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/teamHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/teamnew-functionality/",
       "Permissions" => "http://hmbase.io/teampermissions/",
       "Other" => "http://hmbase.io/teamother/",
       "Export" => "http://hmbase.io/teamexports/",
@@ -188,8 +199,8 @@ $categories = [
     "name" => "Time Clock",
     "subcategories" => array (
       "Format" => "http://hmbase.io/time-clockformat/",
-      "Change" => "http://hmbase.io/time-clockchange/",
-      "New Functionality" => "http://hmbase.io/time-clocknew-functionality/",
+      "How Something Currently Works" => "http://hmbase.io/time-clockHow Something Currently Works/",
+      "New Feature" => "http://hmbase.io/time-clocknew-functionality/",
       "Permissions" => "http://hmbase.io/time-clockpermissions/",
       "Other" => "http://hmbase.io/time-clockother/",
       "Export" => "http://hmbase.io/time-clockexports/",
@@ -197,9 +208,10 @@ $categories = [
   ),
 ];
 
+sort($categories);
+
 echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><strong>'.do_shortcode('[icon agent="fa-search-plus"]').' CS Feature Requests</strong></div>';
 
-	/***** CS REPORT This Week ******/
 	echo '<div style="padding-left: 30px; margin-top: 0px; padding-top: 10px; padding-bottom: 10px; background-color: #fcf7fc;">';
 
   echo '<form method="post" action="/feature-requests">
@@ -207,12 +219,12 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 
 for ($i = 0; $i < count($categories); $i++) {
   //echo "<option value=".$agentNamesArray[$i][0].">".$agentNamesArray[$i][0]."</option>";
-  echo "<option ".selected($_POST['category'], $categories[$i]['name'])."value=".$i.">".$categories[$i]['name']."</option>";
+  echo "<option ".selected($_POST['category'], $categories[$i]['name'])."value=".$categories[$i]['name'].">".$categories[$i]['name']."</option>";
 
 }
 
-/* New Functionality
-Change
+/* New Feature
+How Something Currently Works
 Format
 Permissions
 Exports
@@ -220,12 +232,11 @@ Other */
 
     echo '</select>
     <select name="type">
-    <option '.selected($_POST['type'], 'New Functionality').'value="New Functionality">New Functionality</option>
-    <option '.selected($_POST['type'], 'Change').'value="Change">Change in Current Functionality</option>
+    <option '.selected($_POST['type'], 'New Feature').'value="New Feature">New Feature</option>
+    <option '.selected($_POST['type'], 'How Something Currently Works').'value="How Something Currently Works">How Something Currently Works</option>
     <option '.selected($_POST['type'], 'Format').'value="Format">Format (Colors/Fonts/Layout/Views/etc…)</option>
     <option '.selected($_POST['type'], 'Permissions').'value="Permissions">Permissions</option>
-    <option '.selected($_POST['type'], 'Export').'value="Export">Exports/Uploads</option>
-    <option '.selected($_POST['type'], 'Other').'value="Other">Other</option>
+    <option '.selected($_POST['type'], 'Exports').'value="Exports">Exports/Uploads</option>
     <br>
     <br>
     <input type="submit" value="Go"/>
@@ -233,11 +244,11 @@ Other */
 
      $option = isset($_POST['category']) ? $_POST['category'] : -1;
      if ($option != -1) {
-       $url = $categories[$_POST['category']]['subcategories'][$_POST['type']];
+       $url = 'http://hmbase.io/feature-request-form/?category='.$_POST['category'].'&subcategory='.$_POST['type'];
        echo "<script type='text/javascript'>var link = window.top.location='$url';</script>";
        exit;
      } else {
-       echo "Please select a category and type to go to the form.";
+       echo "Please select a category to submit a feature request.";
      }
 
   echo '</div>'

@@ -995,14 +995,17 @@ function access_entry_via_field( $entry, $form ) {
 		));
 	}
 	else {
+
 		$wpdb->query("UPDATE cs_feature_requests SET
 			requests = (`requests` + 1),
 			adminlinks = concat(adminlinks, '<br>".$adminLink."')
 			WHERE feature_name = '".$existing_feature_name."'");
 
+			$feature = $wpdb->get_row( "SELECT id FROM cs_feature_requests WHERE feature_name = '".$existing_feature_name."'");
+
 			$wpdb->insert('cs_feature_requests_comments', array(
 				'agent_name' => $cs_agent_name,
-				'feature_name' => $existing_feature_name,
+				'feature_id' => $feature->id,
 				'feature_description' => $new_feature_description,
 				'merchant_reason' => $merchant_reason,
 				'additional_notes' => $additional_notes,

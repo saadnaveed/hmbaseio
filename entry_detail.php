@@ -277,67 +277,92 @@ class GFEntryDetail {
 
 				// 18 = status
 				// 3 = agent
-// 				$agents = array (
-// 							'saad',
-// 							'mariam',
-// 							'david',
-// 							'ryan',
-// 							'cindy',
-// 							'ciara',
-// 							'alexander',
-// 							'chris',
-// 							'liza',
-// 							'rosvy',
-// 							'molly',
-// 							'brandon',
-// 							'cat',
-// 							'doc',
-// 							'daveen',
-// 							'kyle',
-// 							'katarina',
-// 							'bridgette',
-// 							'connie',
-// 							'dexter',
-// 							'daniel',
-// 							'missy',
-// 							'rachel',
-// );
-//
-// $agentSlackIDs = array (
-// 							'saad' => 'U9MS7DU65',
-// 							'mariam' => 'invalid',
-// 							'david' => 'U6N5Z6S48',
-// 							'ryan' => 'U8KHGU675',
-// 							'cindy' => 'U9QSJNQ5P',
-// 							'ciara' => 'U6MU2AHQE',
-// 							'alexander' => 'U90F42C5B',
-// 							'chris' => 'U6ZEWR9B9',
-// 							'liza' => 'U0PGVPE1K',
-// 							'rosvy' => 'UA71T4GE5',
-// 							'molly' => 'U7VJ8G3RQ',
-// 							'brandon' => 'UA7EYA49Z',
-// 							'cat' => 'U789XP3QS',
-// 							'doc' => 'U7VKQGB6G',
-// 							'daveen' => 'U9RE7AVD0',
-// 							'kyle' => 'U9WDZQW3X',
-// 							'katarina' => 'U9X5A8R4N',
-// 							'bridgette' => 'U9VPJFM7T',
-// 							'connie' => 'U552KAZ1R',
-// 							'dexter' => 'UA8ELQWKY',
-// 							'daniel' => 'UAKQAED26',
-// 							'missy' => 'invalid',
-// 							'ashlee' => 'UB0LA9G57',
-// 							'joseph' => 'UB1HHQ4TF',
-// 							'rachel' => 'UAT5NPLHJ',
-// );
-//
-// 				for ($i = 0; $i < count($agents); $i++) {
-// 					if (strpos(strtolower($lead['3']), $agents[$i]) !== false) {
-// 						ar_post_to_slack('<@'.$agentSlackIDs[$agents[$i]].'> your billing request for *<' .$lead['13']. '|this ticket>* has been updated! | *Approved Status:* ' .$lead['18'].' | *Additional Notes:* '. $lead['21'],'#cs_billing_updates','Billing Bot',':robot_face:');
-//
-// 						ar_post_to_slack('<@'.$agentSlackIDs[$agents[$i]].'> your billing request for *<' .$lead['13']. '|this ticket>* has been updated! | *Approved Status:* ' .$lead['18'].' | *Additional Notes:* '. $lead['21'], $agentSlackIDs[$agents[$i]],'Billing Bot',':robot_face:');
-// 					}
-// 				}
+				$agents = array (
+							'saad',
+							'mariam',
+							'david',
+							'ryan',
+							'cindy',
+							'ciara',
+							'chris',
+							'liza',
+							'molly',
+							'brandon',
+							'cat',
+							'kyle',
+							'katarina',
+							'bridgette',
+							'dexter',
+							'daniel',
+							'rachel',
+							'maalie',
+							'yhani',
+							'cassie',
+							'cameron',
+							'wes',
+							'briana',
+							'estefany',
+							'may',
+							'amy',
+							'josie',
+							'georgette',
+							'sierra',
+							'rebecca',
+							'bri',
+							'britt',
+							'muhammad',
+							'juan',
+							'dewey',
+);
+
+$agentSlackIDs = array (
+							'saad' => 'U9MS7DU65',
+							'mariam' => 'U916G8SJZ',
+							'david' => 'U6N5Z6S48',
+							'ryan' => 'U8KHGU675',
+							'cindy' => 'U9QSJNQ5P',
+							'ciara' => 'U6MU2AHQE',
+							'chris' => 'U6ZEWR9B9',
+							'liza' => 'U0PGVPE1K',
+							'molly' => 'U7VJ8G3RQ',
+							'brandon' => 'UA7EYA49Z',
+							'cat' => 'U789XP3QS',
+							'kyle' => 'U9WDZQW3X',
+							'katarina' => 'U9X5A8R4N',
+							'bridgette' => 'U9VPJFM7T',
+							'dexter' => 'UA8ELQWKY',
+							'daniel' => 'UAKQAED26',
+							'ashlee' => 'UB0LA9G57',
+							'joseph' => 'UB1HHQ4TF',
+							'rachel' => 'UAT5NPLHJ',
+							'maalie' => 'UBH0W2D2B',
+							'yhani' => 'UBSQF701L',
+							'cassie' => 'UBY3RG5QE',
+							'caitlyn' => 'UBZB6USPL',
+							'cameron' => 'UBZUNG78B',
+							'wes' => 'UBGRFQ57Y',
+							'briana' => 'UBBSXRTFV',
+							'estefany' => 'UBC0H8ZS6',
+							'may' => 'UBF08F0JE',
+							'amy' => 'U1ZAU9HT7',
+							'josie' => 'UC0LH55SS',
+							'georgette' => 'UBNA8CBAM',
+							'sierra' => 'UBYKM3EM6',
+							'rebecca' => 'U5QDV9SCV',
+							'bri' => 'UC7JZD97C',
+							'britt' => 'UC7P2GY93',
+							'muhammad' => 'UCG4R9Z1T',
+							'juan' => 'UCFME0T5H',
+							'dewey' => 'UCH5WTR5L',
+);
+
+				for ($i = 0; $i < count($agents); $i++) {
+					if (strpos(strtolower($lead['3']), $agents[$i]) !== false) {
+						ar_post_to_slack('<@'.$agentSlackIDs[$agents[$i]].'> your billing request for *<' .$lead['13']. '|this ticket>* has been updated! | *Approved Status:* ' .$lead['18'].' | *Additional Notes:* '. $lead['21'],'#cs_billing_updates','Billing Bot',':robot_face:');
+
+						ar_post_to_slack('<@'.$agentSlackIDs[$agents[$i]].'> your billing request for *<' .$lead['13']. '|this ticket>* has been updated! | *Approved Status:* ' .$lead['18'].' | *Additional Notes:* '. $lead['21'], $agentSlackIDs[$agents[$i]],'Billing Bot',':robot_face:');
+					}
+				}
 
 				// if ($lead['form_id'] == 104) {
 				// 	global $wpdb;

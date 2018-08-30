@@ -225,6 +225,10 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 
 for ($i = 0; $i < count($categories); $i++) {
   //echo "<option value=".$agentNamesArray[$i][0].">".$agentNamesArray[$i][0]."</option>";
+  if ($_POST['category'] == 'Time') {
+    $_POST['category'] = 'Time Clock';
+  }
+
   echo "<option ".selected($_POST['category'], $categories[$i]['name'])."value=".$categories[$i]['name'].">".$categories[$i]['name']."</option>";
 
 }
@@ -243,7 +247,7 @@ Other */
     <select class="form-control" id="txtSubCategory" name="type">
     <option '.selected($_POST['type'], '-').'value="-">-</option>
     <option '.selected($_POST['type'], 'New Feature').'value="New Feature">New Feature</option>
-    <option '.selected($_POST['type'], 'How Something Currently Works').'value="How Something Currently Works">How Something Currently Works</option>
+    <option '.selected($_POST['type'], 'Change in How Something Currently Works').'value="Change in How Something Currently Works">Change in How Something Currently Works</option>
     <option '.selected($_POST['type'], 'Format').'value="Format">Format (Colors/Fonts/Layout/Views/etc…)</option>
     <option '.selected($_POST['type'], 'Permissions').'value="Permissions">Permissions</option>
     <option '.selected($_POST['type'], 'Exports').'value="Exports">Exports/Uploads</option>
@@ -253,6 +257,10 @@ Other */
 
      $option = isset($_POST['category']) ? $_POST['category'] : -1;
      if ($option != -1) {
+       if ($_POST['category'] == 'Time') {
+         $_POST['category'] = 'Time Clock';
+       }
+
        if ($_POST['type'] != '-') {
          $features = $wpdb->get_results( "SELECT feature_name, requests FROM cs_feature_requests WHERE category = '".$_POST['category']."' AND subcategory = '".$_POST['type']."' ORDER BY requests DESC LIMIT 5;", ARRAY_N);
          if (!empty($features)) {
@@ -295,7 +303,8 @@ Other */
          echo '<b>Category:</b> '.$features[$i][2].'</span><br>';
          echo '<b>Subcategory:</b> '.$features[$i][3].'</span><br><br>';
        }
-       echo '</ul>';
+       echo '</ul><br>';
+       echo '<a href="/feature-requests">Submit New Request</a>';
      }
 
   echo '</div>'

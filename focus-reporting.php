@@ -334,7 +334,7 @@ $dbCols = 28;
 			}
 
 			for ($i = 4; $i < $dbCols; $i++) {
-				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && !startsWith($focus[$i], 'O') && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
 					$OtherHoursThisWeek += 0.5;
 					$otherItemsListThisWeek[] = $focus[$i];
@@ -530,7 +530,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 			}
 
 			for ($i = 4; $i < $dbCols; $i++) {
-				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && !startsWith($focus[$i], 'O') && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
 					$OtherHoursWeek += 0.5;
 					$otherItemsListWeek[] = $focus[$i];
@@ -726,7 +726,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 			}
 
 			for ($i = 4; $i < $dbCols; $i++) {
-				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+				if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && !startsWith($focus[$i], 'O') && $focus[$i] != 'TC') {
 					//echo $focus[$i]."<br />";
 					$otherItemsListStart[] = $focus[$i];
 					$OtherHoursStart += 0.5;
@@ -925,7 +925,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && !startsWith($focus[$i], 'O') && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursToday += 0.5;
 				$CS_otherItemsListToday[] = $focus[$i];
@@ -1097,7 +1097,7 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && !startsWith($focus[$i], 'O') && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursThisWeek += 0.5;
 				$CS_otherItemsListThisWeek[] = $focus[$i];
@@ -1271,7 +1271,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TR') && !startsWith($focus[$i], 'TT') && $focus[$i] != 'ACT' && !startsWith($focus[$i], 'O') && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursLastWeek += 0.5;
 				$CS_otherItemsListLastWeek[] = $focus[$i];
@@ -1446,7 +1446,7 @@ AND shift_date <= curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY", ARRAY_N);
 		}
 
 		for ($i = 4; $i < $dbCols; $i++) {
-			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && $focus[$i] != 'O' && $focus[$i] != 'TC') {
+			if (!startsWith($focus[$i], 'IC/') && !startsWith($focus[$i], 'IB/') && !startsWith($focus[$i], 'ZD/') && $focus[$i] != '' && $focus[$i] != 'TM' && $focus[$i] != 'LNCH' && !startsWith($focus[$i], 'H') && !startsWith($focus[$i], 'ACT/O') && !startsWith($focus[$i], 'TT') && !startsWith($focus[$i], 'TR') && $focus[$i] != 'ACT' && !startsWith($focus[$i], 'O') && $focus[$i] != 'TC') {
 				//echo $focus[$i]."<br />";
 				$CS_OtherHoursStart += 0.5;
 				$CS_otherItemsListStart[] = $focus[$i];

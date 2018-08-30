@@ -14,7 +14,7 @@ function checkFocusTimes($currentTime, $focusTime, $nextFocusTime) {
 $current_user = wp_get_current_user();
 $username = $current_user->user_login;
 $userID = 0;
-$special = '<center><div style="color: white; width: 300px; background-color: rgba(255, 0, 0, 0.6); padding: 5px; font-size: 11px;">'.do_shortcode('[icon name="fa-exclamation-triangle"]').'<i> We have a new question of the Month: <b>How much time are we saving you per week?</b> (<a href="https://goo.gl/forms/6VK8xksAdCnoLTpb2" target="_blank">Submit Form</a>)</i></div></center>';
+$special = '<center><div style="color: white; width: 300px; background-color: rgba(255, 0, 0, 0.6); padding: 5px; font-size: 11px;">'.do_shortcode('[icon name="fa-exclamation-triangle"]').'<i> We have a new question of the Month: <b>What were you using before Homebase?</b> (<a href="https://goo.gl/forms/ps5J9dyIMnc4MCTd2" target="_blank">Submit Form</a>)</i></div></center>';
 
 $table = TablePress::$model_table->load( 12, true, false );
 
@@ -64,6 +64,8 @@ $agentExt = array (
               'maalie' => '1051',
               'briana' => '0000',
               'may' => '0000',
+              'wes' => '1042',
+              'yhani' => '1050',
 );
 
 $current_date = $date->format("Y-m-d H:i:s");
@@ -71,7 +73,7 @@ $shift_date = $date->format("Y-m-d");
 
 /* Store Updated Focus Data into database */
 /* TODO: make it not execute on every request lol */
-if (strtotime($currentHour) <= strtotime('7:00 PM') && strtotime($currentHour) >= strtotime('8:00AM')) {
+if ((strtotime($currentHour) <= strtotime('7:00 PM') && strtotime($currentHour) >= strtotime('8:00AM') && $dayOfWeek != 'Sun' && $dayOfWeek != 'Sat') || ((strtotime($currentHour) <= strtotime('7:00 PM') && strtotime($currentHour) >= strtotime('9:00AM')) && ($dayOfWeek == 'Sun' || $dayOfWeek == 'Sat'))) {
   for ($i = 3; $i < $totalAgents; $i++) {
 
 

@@ -3,6 +3,8 @@
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
 
+echo '<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">';
+
 function startsWith($haystack, $needle)
 {
      $length = strlen($needle);
@@ -215,7 +217,9 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
 	echo '<div style="padding-left: 30px; margin-top: 0px; padding-top: 10px; padding-bottom: 10px; background-color: #fcf7fc;">';
 
   echo '<form method="post" action="/feature-requests">
-    <select name="category">';
+  <div class="form-group">
+  <label for="txtCategory">Category</label>
+    <select class="form-control" id="txtCategory" name="category">';
 
 for ($i = 0; $i < count($categories); $i++) {
   //echo "<option value=".$agentNamesArray[$i][0].">".$agentNamesArray[$i][0]."</option>";
@@ -230,25 +234,32 @@ Permissions
 Exports
 Other */
 
-    echo '</select>
-    <select name="type">
-    <option '.selected($_POST['type'], 'New Feature').'value="New Feature">New Feature</option>
-    <option '.selected($_POST['type'], 'How Something Currently Works').'value="How Something Currently Works">How Something Currently Works</option>
-    <option '.selected($_POST['type'], 'Format').'value="Format">Format (Colors/Fonts/Layout/Views/etc…)</option>
-    <option '.selected($_POST['type'], 'Permissions').'value="Permissions">Permissions</option>
-    <option '.selected($_POST['type'], 'Exports').'value="Exports">Exports/Uploads</option>
-    <br>
-    <br>
-    <input type="submit" value="Go"/>
-  </form><br>';
+echo '</div>
+<div class="form-group">
+</select>
+<label for="txtSubCategory" style="margin-top: 10px;">Subcategory</label>
+<select class="form-control" id="txtSubCategory" name="type">
+<option '.selected($_POST['type'], 'New Feature').'value="New Feature">New Feature</option>
+<option '.selected($_POST['type'], 'Change in How Something Currently Works').'value="Change in How Something Currently Works">Change in How Something Currently Works</option>
+<option '.selected($_POST['type'], 'Format').'value="Format">Format (Colors/Fonts/Layout/Views/etc…)</option>
+<option '.selected($_POST['type'], 'Permissions').'value="Permissions">Permissions</option>
+<option '.selected($_POST['type'], 'Exports').'value="Exports">Exports/Uploads</option>
+</div>
+<input class="btn btn-primary" style="margin-top: 10px; margin-bottom: 20px;" type="submit" value="Go!"/>
+</form><br>';
 
      $option = isset($_POST['category']) ? $_POST['category'] : -1;
      if ($option != -1) {
+       if ($_POST['category'] == 'Time') {
+         $_POST['category'] = 'Time Clock';
+       }
+
        $url = 'http://hmbase.io/feature-request-form/?category='.$_POST['category'].'&subcategory='.$_POST['type'];
        echo "<script type='text/javascript'>var link = window.top.location='$url';</script>";
        exit;
      } else {
-       echo "Please select a category to submit a feature request.";
+       echo "Please select a category to submit a feature request.<br>";
+       echo '<a href="/feature-requests-list">View Top Requests</a>';
      }
 
   echo '</div>'

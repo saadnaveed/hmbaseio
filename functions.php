@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Twenty Seventeen functions and definitions
  *
@@ -836,6 +837,9 @@ add_filter( 'auth_cookie_expiration', 'wploop_never_log_out' );
         if( '[MGMT] Escalations' == $item->title && !current_user_can( 'administrator' ) ){
             unset( $items[$key] );
         }
+				if( '[MGMT] phpMyAdmin' == $item->title && !current_user_can( 'administrator' ) ){
+            unset( $items[$key] );
+        }
 				if( '[MGMT] Reports' == $item->title && !current_user_can( 'administrator' ) ){
             unset( $items[$key] );
         }
@@ -940,7 +944,7 @@ function populate_movies( $form ) {
 }
 
 /* Timesheets: Tips */
-add_action( 'gform_after_submission', 'access_entry_via_field', 10, 2 );
+add_action( 'gform_after_submission_104', 'access_entry_via_field', 10, 2 );
 function access_entry_via_field( $entry, $form ) {
     foreach ( $form['fields'] as $field ) {
         $inputs = $field->get_entry_inputs();
@@ -964,51 +968,101 @@ function access_entry_via_field( $entry, $form ) {
 	$cs_agent_name = $entry['16'];
 	$category = $entry['13'];
 	$subcategory = $entry['14'];
-	$adminLink = $entry['2'];
+	$user_adminLink = $entry['2'];
+	$location_adminLink = $entry['20'];
 	$existing_feature_name = $entry['9'];
 	$new_feature_name = $entry['12'];
 	$new_feature_description = $entry['18'];
 	$merchant_reason = $entry['11'];
 	$additional_notes = $entry['15'];
+	$ticketLink = $entry['19'];
 
 	if ($cs_requested != 'Yes') {
 		$cs_requested = 'No';
 	}
 
+	if ($additional_notes == '') {
+		$additional_notes = 'N/A';
+	}
+
+	if ($merchant_reason == '') {
+		$merchant_reason = 'N/A';
+	}
+
+	if ($new_feature_description == '') {
+		$new_feature_description = 'N/A';
+	}
+
 	global $wpdb;
+
+	$date = new DateTime(null, new DateTimeZone(date_default_timezone_get()));
+	$date->setTimeZone(new DateTimeZone('America/Chicago'));
+	$submission_date = $date->format("Y-m-d h:i:s");
+
+	$location_id = NULL;
+	$user_id = NULL;
+	if(preg_match("/\/(\d+)$/",$user_adminLink,$matches))
+	{
+	  $user_id=$matches[1];
+	}
+	if(preg_match("/\/(\d+)$/",$location_adminLink,$matches))
+	{
+	  $location_id=$matches[1];
+	}
 
 	// If it's a feature that currently does NOT exist
 	if ($existing_feature_name == 'Not listed Here') {
 		$wpdb->insert('cs_feature_requests', array(
+			'date_submitted' => $submission_date,
 			'agent_name' => $cs_agent_name,
-			'cs_requested' => $cs_requested,
-			'tierForUpgrade' => $tierForUpgrade,
-			'currentplan' => $currentPlan,
-			'adminlinks' => $adminLink,
-			'category' => $category,
-			'subcategory' => $subcategory,
 			'feature_name' => $new_feature_name,
 			'feature_description' => $new_feature_description,
+			'cs_requested' => $cs_requested,
+			'tierForUpgrade' => $tierForUpgrade,
+			'location_id' => $location_id,
+			'user_id' => $user_id,
+			'ticketlink' => $ticketLink,
+			'currentplan' => $currentPlan,
+			'category' => $category,
+			'subcategory' => $subcategory,
 			'merchant_reason' => $merchant_reason,
 			'additional_notes' => $additional_notes,
 			'requests' => 1,
 		));
+
+		$feature = $wpdb->get_row( "SELECT id FROM cs_feature_requests WHERE feature_name LIKE '%".$new_feature_name."%'");
+
+		$wpdb->insert('cs_feature_requests_comments', array(
+			'date_submitted' => $submission_date,
+			'agent_name' => $cs_agent_name,
+			'feature_id' => $feature->id,
+			'feature_description' => $new_feature_description,
+			'merchant_reason' => $merchant_reason,
+			'additional_notes' => $additional_notes,
+			'location_id' => $location_id,
+			'user_id' => $user_id,
+			'ticketlink' => $ticketLink,
+		));
+
 	}
 	else {
 
 		$wpdb->query("UPDATE cs_feature_requests SET
-			requests = (`requests` + 1),
-			adminlinks = concat(adminlinks, '<br>".$adminLink."')
+			requests = (`requests` + 1)
 			WHERE feature_name = '".$existing_feature_name."'");
 
-			$feature = $wpdb->get_row( "SELECT id FROM cs_feature_requests WHERE feature_name = '".$existing_feature_name."'");
+			$feature = $wpdb->get_row( "SELECT id FROM cs_feature_requests WHERE feature_name LIKE '%".$existing_feature_name."%'");
 
 			$wpdb->insert('cs_feature_requests_comments', array(
+				'date_submitted' => $submission_date,
 				'agent_name' => $cs_agent_name,
 				'feature_id' => $feature->id,
 				'feature_description' => $new_feature_description,
 				'merchant_reason' => $merchant_reason,
 				'additional_notes' => $additional_notes,
+				'location_id' => $location_id,
+				'user_id' => $user_id,
+				'ticketlink' => $ticketLink,
 			));
 	}
 }
@@ -1037,3 +1091,12 @@ require get_parent_theme_file_path( '/inc/customizer.php' );
  * SVG icons functions and filters.
  */
 require get_parent_theme_file_path( '/inc/icon-functions.php' );
+
+add_role(
+    'trainee',
+    __( 'Trainee' ),
+    array(
+        'read'         => true,  // true allows this capability
+        'edit_posts'   => false,
+    )
+);

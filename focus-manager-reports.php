@@ -2,6 +2,7 @@
 
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
+echo '<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">';
 
 function startsWith($haystack, $needle)
 {
@@ -61,7 +62,7 @@ function processFocus($focusType, &$agentInfoType, $key) {
           $agentInfoType[$key]['TMHours'] += 0.5;
         }
 
-        if (!startsWith($focusType[$j][$z], 'IC/') && !startsWith($focusType[$j][$z], 'IB/') && !startsWith($focusType[$j][$z], 'ZD/') && $focusType[$j][$z] != '' && $focusType[$j][$z] != 'TM' && $focusType[$j][$z] != 'LNCH' && !startsWith($focusType[$j][$z], 'H/') && !startsWith($focusType[$j][$z], 'ACT/O') && !startsWith($focusType[$j][$z], 'TT') && !startsWith($focusType[$j][$z], 'TR') && $focusType[$j][$z] != 'ACT' && $focusType[$j][$z] != 'O' && $focusType[$j][$z] != 'TC') {
+        if (!startsWith($focusType[$j][$z], 'IC/') && !startsWith($focusType[$j][$z], 'IB/') && !startsWith($focusType[$j][$z], 'ZD/') && $focusType[$j][$z] != '' && $focusType[$j][$z] != 'TM' && $focusType[$j][$z] != 'LNCH' && !startsWith($focusType[$j][$z], 'H/') && !startsWith($focusType[$j][$z], 'ACT/O') && !startsWith($focusType[$j][$z], 'TT') && !startsWith($focusType[$j][$z], 'TR') && $focusType[$j][$z] != 'ACT' && !startsWith($focusType[$j][$z], 'O') && $focusType[$j][$z] != 'TC') {
           //echo $focusType[$i]."<br />";
           $agentInfoType[$key]['OtherHours'] += 0.5;
           $otherItemsListThisWeek[] = $focusType[$j][$z];
@@ -310,7 +311,9 @@ echo '<div style="background-color: #8857ac; color: white; padding: 5px;"><stron
   //$totalCSTaskHours = 0;
 
   echo '<form method="post" action="/manager-reports">
-    <select name="agentName">';
+  <div class="form-group">
+  <label for="txtName">Name</label>
+    <select class="form-control" id="txtName" name="agentName">';
 
     sort($agentNamesArray);
 
@@ -320,15 +323,31 @@ for ($i = 0; $i < count($agentNamesArray); $i++) {
 
 }
     echo '</select>
-    <select name="type">
+    </div>
+    <div class="form-group">
+    <label for="txtType">Type</label>
+    <select class="form-control" id="txtType" name="type">
+    <option '.selected($_POST['type'], 'Custom').'value="Custom">Custom</option>
     <option '.selected($_POST['type'], 'Today').'value="Today">Today</option>
     <option '.selected($_POST['type'], 'This Week').'value="This Week">This Week</option>
     <option '.selected($_POST['type'], 'Last Week').'value="Last Week">Last Week</option>
     <option '.selected($_POST['type'], 'All Time').'value="All Time">All Time</option>
-    <input type="submit" value="View Reports"/>
+    </select>
+    </div>
+    <div class="form-group">
+    <label for="startDate">Start Date</label>
+    <input class="form-control" name="startDate" id="startDate" type="date" value='.$_POST["startDate"].'>
+    </div>
+    <div class="form-group">
+    <label for="endDate">End Date</label>
+    <input class="form-control" name="endDate" id="endDate" type="date" value='.$_POST["endDate"].'>
+    </div>
+    <input class="btn btn-primary" style="margin-top: 10px; margin-bottom: 20px;" type="submit" value="View Reports"/>
   </form><br>';
 
      $option = isset($_POST['agentName']) ? $_POST['agentName'] : -1;
+     $startDate = $_POST['startDate'];
+     $endDate = $_POST['endDate'];
      if ($option != -1) {
 
        echo '<div style="background-color: black; color: white; padding-left: 10px;"><h1>'.$_POST['type'].'</h1></div>';
@@ -380,7 +399,19 @@ for ($i = 0; $i < count($agentNamesArray); $i++) {
              //print_r($agentInfoThisWeek[$_POST['agentName']]);
              //echo htmlentities($_POST['agentName'], ENT_QUOTES, "UTF-8");
            }
-     } else {
+           else if ($_POST['type'] == 'Custom') {
+
+             $focus = $wpdb->get_results( "SELECT * FROM `cs_focus_new` WHERE agent_name = '".$_POST['agentName']."' AND shift_date <= '". $endDate ." 00:00:00' AND shift_date >= '". $startDate ." 00:00:00'", ARRAY_N);
+
+             //print_r($focus);
+             $key = array_search($_POST['agentName'], array_column($agentInfoAllTime, 'agent'));
+
+              processFocus($focus, $agentInfoAllTime, $key);
+              displayStats($agentInfoAllTime, $key);
+              //print_r($agentInfoThisWeek[$_POST['agentName']]);
+              //echo htmlentities($_POST['agentName'], ENT_QUOTES, "UTF-8");
+            }
+   } else {
        echo "Please select an agent to view their reports.";
      }
 

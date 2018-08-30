@@ -142,25 +142,25 @@ $metricsJulyWeek1 = array();
 $metricsJulyWeek1TotalTickets = array();
 $metricsJulyWeek1MostGoodRatings = array();
 
-// Week 1 July
-// $ticketPerHourCell = 'C127';
-// $totalTicketsCell = 'C123';
-// $mostGoodRatingsCell = 'C136';
+// Week 1 August
+$ticketPerHourCell = 'K127';
+$totalTicketsCell = 'K123';
+$mostGoodRatingsCell = 'K136';
 
-// Week 2 July
-// $ticketPerHourCell = 'D127';
-// $totalTicketsCell = 'D123';
-// $mostGoodRatingsCell = 'D136';
+// Week 2 August
+// $ticketPerHourCell = 'L127';
+// $totalTicketsCell = 'L123';
+// $mostGoodRatingsCell = 'L136';
 //
-// // Week 3 July
-$ticketPerHourCell = 'E127';
-$totalTicketsCell = 'E123';
-$mostGoodRatingsCell = 'E136';
+// // Week 3 August
+// $ticketPerHourCell = 'M127';
+// $totalTicketsCell = 'M123';
+// $mostGoodRatingsCell = 'M136';
 //
-// // Week 4 July
-// $ticketPerHourCell = 'F127';
-// $totalTicketsCell = 'F123';
-// $mostGoodRatingsCell = 'F136';
+// // Week 4 August
+// $ticketPerHourCell = 'N127';
+// $totalTicketsCell = 'N123';
+// $mostGoodRatingsCell = 'N136';
 
 foreach($namesAndTables as $name => $table_id) {
     $metricsJulyWeek1[$name] = do_shortcode('[table-cell id='.$table_id.' cell='.$ticketPerHourCell.' /]');
